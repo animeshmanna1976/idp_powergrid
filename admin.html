@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POWERGRID — Leadership Pipeline Manager (Admin)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="auth.js"></script>
+  <style>
+    @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes counterUp { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }
+    
+    .slide-up { animation: slideInUp 0.6s ease-out; }
+    .slide-up-delay-1 { animation: slideInUp 0.6s ease-out 0.1s both; }
+    .slide-up-delay-2 { animation: slideInUp 0.6s ease-out 0.2s both; }
+    .slide-up-delay-3 { animation: slideInUp 0.6s ease-out 0.3s both; }
+    .counter-up { animation: counterUp 0.8s ease-out; }
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      animation: fadeIn 0.3s ease-out;
+    }
+    .modal.active { display: flex; align-items: center; justify-content: center; }
+    .modal-content {
+      background: white;
+      border-radius: 1rem;
+      max-width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: slideInUp 0.4s ease-out;
+    }
+    
+    /* Drawer styles */
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 600px;
+      height: 100vh;
+      background: white;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.15);
+      transition: right 0.3s ease-out;
+      z-index: 1001;
+      overflow-y: auto;
+    }
+    .drawer.active { right: 0; }
+    
+    /* Progress ring */
+    .progress-ring {
+      transform: rotate(-90deg);
+    }
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.5s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="bg-white shadow p-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <img src="https://via.placeholder.com/140x38/4F46E5/fff?text=POWERGRID" alt="logo" class="h-8">
+        <h1 class="text-lg font-bold">Leadership Pipeline Manager</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="employee.html" class="text-sm text-indigo-600 hover:underline">Switch to Employee Portal</a>
+        <button id="logout-admin" class="px-3 py-1 bg-indigo-600 text-white rounded">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-6">
+    <section class="slide-up grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="card p-6 text-center hover-lift bg-gradient-to-br from-indigo-50 to-indigo-100 border-t-4 border-indigo-600">
+        <div class="text-sm text-indigo-600 font-semibold mb-2 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          Leadership Readiness
+        </div>
+        <div id="kpi-readiness" class="text-4xl font-bold text-indigo-600 counter-up">72%</div>
+        <div class="text-xs text-gray-500 mt-2">↑ 5% from last quarter</div>
+      </div>
+      <div class="card p-6 text-center hover-lift bg-gradient-to-br from-green-50 to-green-100 border-t-4 border-green-600">
+        <div class="text-sm text-green-600 font-semibold mb-2 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Active IDPs
+        </div>
+        <div id="kpi-idps" class="text-4xl font-bold text-green-600 counter-up">12</div>
+        <div class="text-xs text-gray-500 mt-2">3 completed this month</div>
+      </div>
+      <div class="card p-6 text-center hover-lift bg-gradient-to-br from-purple-50 to-purple-100 border-t-4 border-purple-600">
+        <div class="text-sm text-purple-600 font-semibold mb-2 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          Avg Gap Score
+        </div>
+        <div id="kpi-gap" class="text-4xl font-bold text-purple-600 counter-up">18</div>
+        <div class="text-xs text-gray-500 mt-2">Across all competencies</div>
+      </div>
+    </section>
+
+    <section class="slide-up-delay-1 grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="card p-6 hover-lift">
+        <h3 class="font-bold mb-4 text-lg flex items-center gap-2">
+          <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>
+          </svg>
+          9-Box Matrix Snapshot
+        </h3>
+        <div id="ninebox" class="grid grid-cols-3 gap-2">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+
+      <div class="card p-6 hover-lift">
+        <h3 class="font-bold mb-4 text-lg flex items-center gap-2">
+          <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
+          Gap Summary Heatmap
+        </h3>
+        <canvas id="heatmap" height="240"></canvas>
+      </div>
+    </section>
+
+    <section class="slide-up-delay-2 card p-6 hover-lift">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
+        <h3 class="font-bold text-lg flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          Employees & Analytics
+        </h3>
+        <div class="flex gap-3 items-center flex-wrap">
+          <input id="admin-search" placeholder="Filter by name/role..." class="px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600 transition" />
+          <button id="create-idp-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Create IDP
+          </button>
+          <button id="export-report-btn" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            Export Report
+          </button>
+        </div>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm" id="admin-table">
+          <thead class="text-xs text-gray-600 bg-gray-50">
+            <tr>
+              <th class="p-3 text-left font-semibold">Name</th>
+              <th class="p-3 text-left font-semibold">Role</th>
+              <th class="p-3 text-left font-semibold">9-Box</th>
+              <th class="p-3 text-left font-semibold">Readiness</th>
+              <th class="p-3 text-left font-semibold">Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Create IDP Modal -->
+  <div id="create-idp-modal" class="modal">
+    <div class="modal-content w-full max-w-4xl p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Create Individual Development Plan</h2>
+        <button class="close-modal text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      </div>
+      
+      <form id="idp-form">
+        <!-- Step 1: Select Employee -->
+        <div id="step-1" class="step">
+          <h3 class="text-lg font-semibold mb-4">Step 1: Select Employee</h3>
+          <select id="employee-select" class="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-indigo-600 mb-4" required>
+            <option value="">-- Choose Employee --</option>
+          </select>
+          
+          <div id="employee-info" class="hidden bg-gray-50 p-4 rounded-lg mb-4">
+            <!-- Employee details filled by JS -->
+          </div>
+          
+          <button type="button" onclick="nextStep(2)" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Next</button>
+        </div>
+        
+        <!-- Step 2: Define Development Goals -->
+        <div id="step-2" class="step hidden">
+          <h3 class="text-lg font-semibold mb-4">Step 2: Define Development Goals</h3>
+          
+          <div class="space-y-4 mb-4">
+            <div>
+              <label class="block text-sm font-semibold mb-2">Target Role</label>
+              <input type="text" id="target-role" class="w-full px-4 py-2 border rounded-lg" placeholder="e.g., Senior Manager" required>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold mb-2">Development Timeline</label>
+              <select id="timeline" class="w-full px-4 py-2 border rounded-lg" required>
+                <option value="3">3 Months</option>
+                <option value="6" selected>6 Months</option>
+                <option value="12">12 Months</option>
+                <option value="18">18 Months</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold mb-2">Key Competencies to Develop</label>
+              <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="competencies" value="Strategic Thinking" class="rounded">
+                  <span class="text-sm">Strategic Thinking</span>
+                </label>
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="competencies" value="Leadership" class="rounded">
+                  <span class="text-sm">Leadership</span>
+                </label>
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="competencies" value="Communication" class="rounded">
+                  <span class="text-sm">Communication</span>
+                </label>
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="competencies" value="Problem Solving" class="rounded">
+                  <span class="text-sm">Problem Solving</span>
+                </label>
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="competencies" value="Team Management" class="rounded">
+                  <span class="text-sm">Team Management</span>
+                </label>
+                <label class="flex items-center gap-2">
+                  <input type="checkbox" name="competencies" value="Innovation" class="rounded">
+                  <span class="text-sm">Innovation</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex gap-3">
+            <button type="button" onclick="prevStep(1)" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Back</button>
+            <button type="button" onclick="nextStep(3)" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Next</button>
+          </div>
+        </div>
+        
+        <!-- Step 3: Add Development Activities -->
+        <div id="step-3" class="step hidden">
+          <h3 class="text-lg font-semibold mb-4">Step 3: Add Development Activities</h3>
+          
+          <div id="activities-list" class="space-y-3 mb-4">
+            <!-- Activities added dynamically -->
+          </div>
+          
+          <button type="button" onclick="addActivity()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 text-sm mb-4">
+            + Add Activity
+          </button>
+          
+          <div class="flex gap-3">
+            <button type="button" onclick="prevStep(2)" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Back</button>
+            <button type="button" onclick="nextStep(4)" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Next</button>
+          </div>
+        </div>
+        
+        <!-- Step 4: Assign Mentor & Review -->
+        <div id="step-4" class="step hidden">
+          <h3 class="text-lg font-semibold mb-4">Step 4: Assign Mentor & Review</h3>
+          
+          <div class="space-y-4 mb-4">
+            <div>
+              <label class="block text-sm font-semibold mb-2">Assign Mentor</label>
+              <select id="mentor-select" class="w-full px-4 py-2 border rounded-lg" required>
+                <option value="">-- Choose Mentor --</option>
+                <option value="Sarah Chen">Sarah Chen (VP Operations)</option>
+                <option value="Michael Brown">Michael Brown (Director HR)</option>
+                <option value="Lisa Anderson">Lisa Anderson (Senior Manager)</option>
+                <option value="David Kumar">David Kumar (Team Lead)</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold mb-2">Additional Notes</label>
+              <textarea id="idp-notes" rows="4" class="w-full px-4 py-2 border rounded-lg" placeholder="Any additional instructions or observations..."></textarea>
+            </div>
+          </div>
+          
+          <div class="bg-indigo-50 p-4 rounded-lg mb-4">
+            <h4 class="font-semibold mb-2">IDP Summary</h4>
+            <div id="idp-summary" class="text-sm text-gray-600">
+              <!-- Filled by JS -->
+            </div>
+          </div>
+          
+          <div class="flex gap-3">
+            <button type="button" onclick="prevStep(3)" class="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Back</button>
+            <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Create IDP</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Employee Detail Drawer -->
+  <div id="employee-drawer" class="drawer">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold">Employee Details</h2>
+        <button class="close-drawer text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      </div>
+      
+      <div id="drawer-content">
+        <!-- Content filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Report Modal -->
+  <div id="progress-modal" class="modal">
+    <div class="modal-content w-full max-w-3xl p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">Update Progress Report</h2>
+        <button class="close-modal text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      </div>
+      
+      <form id="progress-form">
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="block text-sm font-semibold mb-2">Employee</label>
+            <input type="text" id="progress-employee" class="w-full px-4 py-2 border rounded-lg bg-gray-50" readonly>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-2">Overall Progress (%)</label>
+            <input type="range" id="progress-slider" min="0" max="100" value="0" class="w-full">
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>0%</span>
+              <span id="progress-value" class="font-semibold text-indigo-600">0%</span>
+              <span>100%</span>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-2">Completed Activities</label>
+            <div id="completed-activities" class="space-y-2">
+              <!-- Checkboxes filled by JS -->
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-2">Progress Notes</label>
+            <textarea id="progress-notes" rows="4" class="w-full px-4 py-2 border rounded-lg" placeholder="Achievements, challenges, observations..."></textarea>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-semibold mb-2">Next Steps</label>
+            <textarea id="next-steps" rows="3" class="w-full px-4 py-2 border rounded-lg" placeholder="Upcoming milestones and actions..."></textarea>
+          </div>
+        </div>
+        
+        <div class="flex gap-3">
+          <button type="button" class="close-modal px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400">Cancel</button>
+          <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">Save Progress</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="portal.js"></script>
+  <script>
+    let currentEmployee = null;
+    let currentStep = 1;
+    let activities = [];
+    
+    // Check authentication on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const currentUser = AuthManager.getCurrentUser();
+      const session = JSON.parse(sessionStorage.getItem('powergrid_session') || '{}');
+      
+      if (!currentUser && !session.isDemo) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      if (currentUser) {
+        loadAdminData(currentUser);
+      } else if (session.isDemo) {
+        loadDemoAdminData();
+      }
+      
+      initializeEventListeners();
+    });
+    
+    function loadAdminData(user) {
+      const allUsers = AuthManager.getAllUsers();
+      const employees = allUsers.filter(u => u.role === 'employee');
+      
+      updateKPIs(employees);
+      renderEmployeeTable(employees);
+      render9BoxMatrix(employees);
+      renderGapHeatmap(employees);
+      populateEmployeeSelect(employees);
+    }
+    
+    function loadDemoAdminData() {
+      console.log('Loading demo admin data...');
+    }
+    
+    function updateKPIs(employees) {
+      if (employees.length === 0) {
+        document.getElementById('kpi-readiness').textContent = '0%';
+        document.getElementById('kpi-idps').textContent = '0';
+        document.getElementById('kpi-gap').textContent = '0';
+        return;
+      }
+      
+      let totalReadiness = 0;
+      let activeIDPs = 0;
+      let totalGap = 0;
+      
+      employees.forEach(emp => {
+        if (emp.profileData && emp.profileData.competencies) {
+          const readiness = calculateEmployeeReadiness(emp.profileData.competencies);
+          totalReadiness += readiness;
+          
+          if (emp.profileData.idp && emp.profileData.idp.length > 0) {
+            activeIDPs++;
+          }
+          
+          const gaps = calculateGaps(emp.profileData.competencies);
+          totalGap += gaps;
+        }
+      });
+      
+      const avgReadiness = Math.round(totalReadiness / employees.length);
+      const avgGap = Math.round(totalGap / employees.length);
+      
+      animateCounter('kpi-readiness', avgReadiness, '%');
+      animateCounter('kpi-idps', activeIDPs, '');
+      animateCounter('kpi-gap', avgGap, '');
+    }
+    
+    function calculateEmployeeReadiness(competencies) {
+      if (!competencies) return 0;
+      const avgScore = Object.values(competencies).reduce((a, b) => a + b, 0) / Object.keys(competencies).length;
+      return Math.min(Math.round((avgScore / 85) * 100), 99);
+    }
+    
+    function calculateGaps(competencies) {
+      if (!competencies) return 0;
+      const targetScore = 85;
+      const gaps = Object.values(competencies).map(score => Math.max(0, targetScore - score));
+      return gaps.reduce((a, b) => a + b, 0) / gaps.length;
+    }
+    
+    function animateCounter(elementId, targetValue, suffix) {
+      const element = document.getElementById(elementId);
+      let currentValue = 0;
+      const increment = targetValue / 30;
+      
+      const timer = setInterval(() => {
+        currentValue += increment;
+        if (currentValue >= targetValue) {
+          element.textContent = targetValue + suffix;
+          clearInterval(timer);
+        } else {
+          element.textContent = Math.round(currentValue) + suffix;
+        }
+      }, 30);
+    }
+    
+    function renderEmployeeTable(employees) {
+      const tableBody = document.querySelector('#admin-table tbody');
+      if (!tableBody) return;
+      
+      if (employees.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="p-6 text-center text-gray-500">
+              <div class="flex flex-col items-center gap-3">
+                <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <div>
+                  <div class="font-semibold text-lg mb-1">No employees yet</div>
+                  <div class="text-sm">Employees who sign up will appear here</div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tableBody.innerHTML = employees.map(emp => {
+        const readiness = emp.profileData && emp.profileData.competencies ? 
+          calculateEmployeeReadiness(emp.profileData.competencies) : 0;
+        
+        const nineBox = get9BoxPosition(emp);
+        const nineBoxColor = getNineBoxColor(nineBox);
+        
+        return `
+          <tr class="border-b hover:bg-gray-50 transition">
+            <td class="p-3">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold text-sm">
+                  ${emp.name.charAt(0)}
+                </div>
+                <div>
+                  <div class="font-semibold">${emp.name}</div>
+                  <div class="text-xs text-gray-500">${emp.email}</div>
+                </div>
+              </div>
+            </td>
+            <td class="p-3">
+              <div class="font-medium">${emp.position || 'Employee'}</div>
+            </td>
+            <td class="p-3">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold ${nineBoxColor}">
+                ${nineBox}
+              </span>
+            </td>
+            <td class="p-3">
+              <div class="flex items-center gap-2">
+                <div class="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div class="h-full bg-indigo-600" style="width: ${readiness}%"></div>
+                </div>
+                <span class="text-sm font-semibold">${readiness}%</span>
+              </div>
+            </td>
+            <td class="p-3">
+              <div class="flex gap-2">
+                <button onclick="viewEmployeeDetails('${emp.email}')" class="text-indigo-600 hover:text-indigo-700 text-sm font-semibold">View</button>
+                <button onclick="updateProgress('${emp.email}')" class="text-green-600 hover:text-green-700 text-sm font-semibold">Progress</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+    
+    function get9BoxPosition(employee) {
+      if (!employee.profileData || !employee.profileData.competencies) {
+        return 'Low/Low';
+      }
+      
+      const readiness = calculateEmployeeReadiness(employee.profileData.competencies);
+      const potential = Math.floor(Math.random() * 30) + 70;
+      
+      const performanceLevel = readiness >= 80 ? 'High' : readiness >= 60 ? 'Med' : 'Low';
+      const potentialLevel = potential >= 80 ? 'High' : potential >= 60 ? 'Med' : 'Low';
+      
+      return `${performanceLevel}/${potentialLevel}`;
+    }
+    
+    function getNineBoxColor(position) {
+      if (position.includes('High/High')) return 'bg-green-100 text-green-700';
+      if (position.includes('High') || position.includes('Med/High')) return 'bg-blue-100 text-blue-700';
+      if (position.includes('Med')) return 'bg-yellow-100 text-yellow-700';
+      return 'bg-gray-100 text-gray-700';
+    }
+    
+    function render9BoxMatrix(employees) {
+      console.log('Rendering 9-box matrix for', employees.length, 'employees');
+    }
+    
+    function renderGapHeatmap(employees) {
+      console.log('Rendering gap heatmap for', employees.length, 'employees');
+    }
+    
+    // Initialize event listeners
+    function initializeEventListeners() {
+      // Search functionality
+      const searchInput = document.getElementById('admin-search');
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          const searchTerm = this.value.toLowerCase();
+          const rows = document.querySelectorAll('#admin-table tbody tr');
+          
+          rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? '' : 'none';
+          });
+        });
+      }
+      
+      // Modal close buttons
+      document.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+        });
+      });
+      
+      // Drawer close button
+      document.querySelectorAll('.close-drawer').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.getElementById('employee-drawer').classList.remove('active');
+        });
+      });
+      
+      // Create IDP button
+      document.getElementById('create-idp-btn').addEventListener('click', () => {
+        document.getElementById('create-idp-modal').classList.add('active');
+        currentStep = 1;
+        showStep(1);
+      });
+      
+      // Export Report button
+      document.getElementById('export-report-btn').addEventListener('click', exportReport);
+      
+      // IDP Form submit
+      document.getElementById('idp-form').addEventListener('submit', handleIDPSubmit);
+      
+      // Progress Form submit
+      document.getElementById('progress-form').addEventListener('submit', handleProgressSubmit);
+      
+      // Progress slider
+      const slider = document.getElementById('progress-slider');
+      const valueDisplay = document.getElementById('progress-value');
+      if (slider && valueDisplay) {
+        slider.addEventListener('input', () => {
+          valueDisplay.textContent = slider.value + '%';
+        });
+      }
+      
+      // Employee select change
+      document.getElementById('employee-select').addEventListener('change', function() {
+        const email = this.value;
+        if (email) {
+          const employee = AuthManager.getAllUsers().find(u => u.email === email);
+          if (employee) {
+            displayEmployeeInfo(employee);
+          }
+        }
+      });
+      
+      // Logout
+      document.getElementById('logout-admin').addEventListener('click', () => {
+        AuthManager.logout();
+        window.location.href = 'login.html';
+      });
+    }
+    
+    // Populate employee dropdown
+    function populateEmployeeSelect(employees) {
+      const select = document.getElementById('employee-select');
+      if (!select) return;
+      
+      select.innerHTML = '<option value="">-- Choose Employee --</option>';
+      employees.forEach(emp => {
+        select.innerHTML += `<option value="${emp.email}">${emp.name} (${emp.position || 'Employee'})</option>`;
+      });
+    }
+    
+    // Display employee info in modal
+    function displayEmployeeInfo(employee) {
+      const infoDiv = document.getElementById('employee-info');
+      if (!infoDiv) return;
+      
+      const readiness = employee.profileData && employee.profileData.competencies ? 
+        calculateEmployeeReadiness(employee.profileData.competencies) : 0;
+      
+      infoDiv.innerHTML = `
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <div class="text-sm text-gray-600">Name</div>
+            <div class="font-semibold">${employee.name}</div>
+          </div>
+          <div>
+            <div class="text-sm text-gray-600">Current Role</div>
+            <div class="font-semibold">${employee.position || 'Employee'}</div>
+          </div>
+          <div>
+            <div class="text-sm text-gray-600">Email</div>
+            <div class="font-semibold">${employee.email}</div>
+          </div>
+          <div>
+            <div class="text-sm text-gray-600">Readiness Score</div>
+            <div class="font-semibold text-indigo-600">${readiness}%</div>
+          </div>
+        </div>
+      `;
+      infoDiv.classList.remove('hidden');
+      currentEmployee = employee;
+    }
+    
+    // Step navigation
+    function showStep(stepNum) {
+      document.querySelectorAll('.step').forEach(step => step.classList.add('hidden'));
+      document.getElementById(`step-${stepNum}`).classList.remove('hidden');
+      currentStep = stepNum;
+      
+      if (stepNum === 4) {
+        updateIDPSummary();
+      }
+    }
+    
+    function nextStep(stepNum) {
+      if (currentStep === 1 && !currentEmployee) {
+        alert('Please select an employee first');
+        return;
+      }
+      if (currentStep === 2) {
+        const targetRole = document.getElementById('target-role').value;
+        const checkedCompetencies = document.querySelectorAll('input[name="competencies"]:checked');
+        if (!targetRole || checkedCompetencies.length === 0) {
+          alert('Please fill all required fields');
+          return;
+        }
+      }
+      showStep(stepNum);
+    }
+    
+    function prevStep(stepNum) {
+      showStep(stepNum);
+    }
+    
+    // Add activity
+    function addActivity() {
+      const activityId = Date.now();
+      const activityHTML = `
+        <div class="activity-item border rounded-lg p-4" data-id="${activityId}">
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-semibold mb-1">Activity Type</label>
+              <select class="w-full px-3 py-2 border rounded text-sm" required>
+                <option value="Training">Training Course</option>
+                <option value="Mentoring">Mentoring Session</option>
+                <option value="Project">Stretch Project</option>
+                <option value="Workshop">Workshop</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1">Activity Name</label>
+              <input type="text" class="w-full px-3 py-2 border rounded text-sm" placeholder="e.g., Leadership 101" required>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold mb-1">Duration</label>
+              <input type="text" class="w-full px-3 py-2 border rounded text-sm" placeholder="e.g., 2 weeks" required>
+            </div>
+          </div>
+          <button type="button" onclick="removeActivity(${activityId})" class="mt-2 text-red-600 text-sm hover:text-red-700">Remove</button>
+        </div>
+      `;
+      document.getElementById('activities-list').insertAdjacentHTML('beforeend', activityHTML);
+      activities.push(activityId);
+    }
+    
+    function removeActivity(id) {
+      document.querySelector(`[data-id="${id}"]`).remove();
+      activities = activities.filter(a => a !== id);
+    }
+    
+    // Update IDP summary
+    function updateIDPSummary() {
+      const targetRole = document.getElementById('target-role').value;
+      const timeline = document.getElementById('timeline').value;
+      const competencies = Array.from(document.querySelectorAll('input[name="competencies"]:checked'))
+        .map(cb => cb.value);
+      const activityCount = document.querySelectorAll('.activity-item').length;
+      const mentor = document.getElementById('mentor-select').value;
+      
+      const summaryHTML = `
+        <div class="space-y-2">
+          <div><strong>Employee:</strong> ${currentEmployee?.name}</div>
+          <div><strong>Target Role:</strong> ${targetRole}</div>
+          <div><strong>Timeline:</strong> ${timeline} months</div>
+          <div><strong>Focus Areas:</strong> ${competencies.join(', ')}</div>
+          <div><strong>Activities:</strong> ${activityCount} planned</div>
+          <div><strong>Mentor:</strong> ${mentor || 'Not assigned'}</div>
+        </div>
+      `;
+      document.getElementById('idp-summary').innerHTML = summaryHTML;
+    }
+    
+    // Handle IDP form submit
+    function handleIDPSubmit(e) {
+      e.preventDefault();
+      
+      const idpData = {
+        employeeEmail: currentEmployee.email,
+        targetRole: document.getElementById('target-role').value,
+        timeline: document.getElementById('timeline').value,
+        competencies: Array.from(document.querySelectorAll('input[name="competencies"]:checked')).map(cb => cb.value),
+        activities: Array.from(document.querySelectorAll('.activity-item')).map(item => ({
+          type: item.querySelector('select').value,
+          name: item.querySelectorAll('input')[0].value,
+          duration: item.querySelectorAll('input')[1].value,
+          completed: false
+        })),
+        mentor: document.getElementById('mentor-select').value,
+        notes: document.getElementById('idp-notes').value,
+        createdAt: new Date().toISOString(),
+        progress: 0
+      };
+      
+      // Save to user's profile
+      const users = AuthManager.getAllUsers();
+      const userIndex = users.findIndex(u => u.email === currentEmployee.email);
+      if (userIndex !== -1) {
+        if (!users[userIndex].profileData) users[userIndex].profileData = {};
+        if (!users[userIndex].profileData.idps) users[userIndex].profileData.idps = [];
+        users[userIndex].profileData.idps.push(idpData);
+        
+        // Update localStorage
+        localStorage.setItem('powergrid_users', JSON.stringify(users));
+        
+        // Show success message
+        alert('IDP created successfully!');
+        
+        // Close modal and refresh
+        document.getElementById('create-idp-modal').classList.remove('active');
+        location.reload();
+      }
+    }
+    
+    // View employee details
+    function viewEmployeeDetails(email) {
+      const employee = AuthManager.getAllUsers().find(u => u.email === email);
+      if (!employee) return;
+      
+      const drawer = document.getElementById('employee-drawer');
+      const content = document.getElementById('drawer-content');
+      
+      const readiness = employee.profileData && employee.profileData.competencies ? 
+        calculateEmployeeReadiness(employee.profileData.competencies) : 0;
+      
+      const idps = employee.profileData?.idps || [];
+      
+      content.innerHTML = `
+        <div class="space-y-6">
+          <div class="flex items-center gap-4 pb-4 border-b">
+            <div class="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-2xl">
+              ${employee.name.charAt(0)}
+            </div>
+            <div>
+              <h3 class="text-xl font-bold">${employee.name}</h3>
+              <p class="text-gray-600">${employee.position || 'Employee'}</p>
+              <p class="text-sm text-gray-500">${employee.email}</p>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold mb-2">Readiness Score</h4>
+            <div class="flex items-center gap-3">
+              <div class="flex-1 h-4 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-indigo-600" style="width: ${readiness}%"></div>
+              </div>
+              <span class="text-lg font-bold text-indigo-600">${readiness}%</span>
+            </div>
+          </div>
+          
+          <div>
+            <h4 class="font-semibold mb-3">Development Plans (${idps.length})</h4>
+            ${idps.length > 0 ? idps.map((idp, index) => `
+              <div class="bg-gray-50 p-4 rounded-lg mb-3">
+                <div class="flex justify-between items-start mb-2">
+                  <div>
+                    <div class="font-semibold">${idp.targetRole}</div>
+                    <div class="text-sm text-gray-500">${idp.timeline} months timeline</div>
+                  </div>
+                  <span class="px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs font-semibold">${idp.progress}% Complete</span>
+                </div>
+                <div class="text-sm text-gray-600 mt-2">
+                  <strong>Focus:</strong> ${idp.competencies.join(', ')}
+                </div>
+                <div class="text-sm text-gray-600">
+                  <strong>Mentor:</strong> ${idp.mentor}
+                </div>
+              </div>
+            `).join('') : '<p class="text-gray-500 text-sm">No IDPs created yet</p>'}
+          </div>
+        </div>
+      `;
+      
+      drawer.classList.add('active');
+    }
+    
+    // Update progress
+    function updateProgress(email) {
+      const employee = AuthManager.getAllUsers().find(u => u.email === email);
+      if (!employee || !employee.profileData?.idps?.length) {
+        alert('No IDP found for this employee');
+        return;
+      }
+      
+      const latestIDP = employee.profileData.idps[employee.profileData.idps.length - 1];
+      
+      document.getElementById('progress-employee').value = employee.name;
+      document.getElementById('progress-slider').value = latestIDP.progress || 0;
+      document.getElementById('progress-value').textContent = (latestIDP.progress || 0) + '%';
+      
+      // Populate activities
+      const activitiesDiv = document.getElementById('completed-activities');
+      activitiesDiv.innerHTML = latestIDP.activities.map((act, index) => `
+        <label class="flex items-center gap-2">
+          <input type="checkbox" value="${index}" ${act.completed ? 'checked' : ''} class="rounded">
+          <span class="text-sm">${act.name} (${act.type})</span>
+        </label>
+      `).join('');
+      
+      document.getElementById('progress-modal').classList.add('active');
+      currentEmployee = employee;
+    }
+    
+    // Handle progress form submit
+    function handleProgressSubmit(e) {
+      e.preventDefault();
+      
+      const progress = parseInt(document.getElementById('progress-slider').value);
+      const notes = document.getElementById('progress-notes').value;
+      const nextSteps = document.getElementById('next-steps').value;
+      const completedIndexes = Array.from(document.querySelectorAll('#completed-activities input:checked')).map(cb => parseInt(cb.value));
+      
+      const users = AuthManager.getAllUsers();
+      const userIndex = users.findIndex(u => u.email === currentEmployee.email);
+      
+      if (userIndex !== -1) {
+        const idpIndex = users[userIndex].profileData.idps.length - 1;
+        users[userIndex].profileData.idps[idpIndex].progress = progress;
+        users[userIndex].profileData.idps[idpIndex].progressNotes = notes;
+        users[userIndex].profileData.idps[idpIndex].nextSteps = nextSteps;
+        
+        completedIndexes.forEach(index => {
+          users[userIndex].profileData.idps[idpIndex].activities[index].completed = true;
+        });
+        
+        users[userIndex].profileData.idps[idpIndex].lastUpdated = new Date().toISOString();
+        
+        localStorage.setItem('powergrid_users', JSON.stringify(users));
+        
+        alert('Progress updated successfully!');
+        document.getElementById('progress-modal').classList.remove('active');
+        location.reload();
+      }
+    }
+    
+    // Export report
+    function exportReport() {
+      const employees = AuthManager.getAllUsers().filter(u => u.role === 'employee');
+      
+      let reportContent = 'POWERGRID Leadership Pipeline Report\n';
+      reportContent += '=====================================\n\n';
+      reportContent += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+      
+      employees.forEach(emp => {
+        const readiness = emp.profileData && emp.profileData.competencies ? 
+          calculateEmployeeReadiness(emp.profileData.competencies) : 0;
+        
+        reportContent += `Employee: ${emp.name}\n`;
+        reportContent += `Position: ${emp.position || 'Employee'}\n`;
+        reportContent += `Readiness: ${readiness}%\n`;
+        reportContent += `IDPs: ${emp.profileData?.idps?.length || 0}\n`;
+        reportContent += '---\n\n';
+      });
+      
+      const blob = new Blob([reportContent], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `powergrid-report-${Date.now()}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    
+    // Initial activity
+    setTimeout(() => {
+      if (currentStep === 3 && activities.length === 0) {
+        addActivity();
+      }
+    }, 500);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POWERGRID Succession Planning & Leadership Development Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <img src="https://via.placeholder.com/150x50/4F46E5/FFFFFF?text=POWERGRID" alt="POWERGRID Logo">
+            </div>
+            <nav class="nav">
+                <button id="committee-tab" class="tab active">Committee View</button>
+                <button id="idp-tab" class="tab">My IDP (Anya Sharma)</button>
+            </nav>
+        </header>
+
+        <main id="main-content">
+            <!-- Committee View -->
+            <div id="committee-view" class="view active">
+                <div class="scorecards">
+                    <div class="scorecard">
+                        <h3>Succession Risk Index</h3>
+                        <div class="gauge" id="risk-gauge">7.5</div>
+                    </div>
+                    <div class="scorecard">
+                        <h3>Bench Strength</h3>
+                        <div class="value">85%</div>
+                    </div>
+                    <div class="scorecard">
+                        <h3>HiPo Flight Risk %</h3>
+                        <div class="value">12%</div>
+                    </div>
+                    <div class="scorecard">
+                        <h3>Avg Time-to-Ready</h3>
+                        <div class="value">18 months</div>
+                    </div>
+                    <div class="scorecard">
+                        <h3>Internal Promotion Rate</h3>
+                        <div class="value">68%</div>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <div class="left-panel">
+                        <div class="nine-box-grid">
+                            <div class="grid-header">9-Box Performance-Potential Matrix</div>
+                            <div class="grid">
+                                <div class="quadrant" data-quadrant="1" data-names="John Doe, Jane Smith">
+                                    <div class="label">High Perf / High Pot</div>
+                                    <div class="avatars">
+                                        <div class="avatar"></div>
+                                        <div class="avatar"></div>
+                                    </div>
+                                </div>
+                                <div class="quadrant" data-quadrant="2" data-names="Alice Brown">
+                                    <div class="label">High Perf / Med Pot</div>
+                                    <div class="avatars">
+                                        <div class="avatar"></div>
+                                    </div>
+                                </div>
+                                <div class="quadrant" data-quadrant="3" data-names="">
+                                    <div class="label">High Perf / Low Pot</div>
+                                    <div class="avatars"></div>
+                                </div>
+                                <div class="quadrant" data-quadrant="4" data-names="Bob Wilson">
+                                    <div class="label">Med Perf / High Pot</div>
+                                    <div class="avatars">
+                                        <div class="avatar"></div>
+                                    </div>
+                                </div>
+                                <div class="quadrant" data-quadrant="5" data-names="Charlie Davis">
+                                    <div class="label">Med Perf / Med Pot</div>
+                                    <div class="avatars">
+                                        <div class="avatar"></div>
+                                    </div>
+                                </div>
+                                <div class="quadrant" data-quadrant="6" data-names="">
+                                    <div class="label">Med Perf / Low Pot</div>
+                                    <div class="avatars"></div>
+                                </div>
+                                <div class="quadrant" data-quadrant="7" data-names="">
+                                    <div class="label">Low Perf / High Pot</div>
+                                    <div class="avatars"></div>
+                                </div>
+                                <div class="quadrant" data-quadrant="8" data-names="">
+                                    <div class="label">Low Perf / Med Pot</div>
+                                    <div class="avatars"></div>
+                                </div>
+                                <div class="quadrant" data-quadrant="9" data-names="">
+                                    <div class="label">Low Perf / Low Pot</div>
+                                    <div class="avatars"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-panel">
+                        <div class="hipo-table">
+                            <h3>Top 10 High Potentials</h3>
+                            <div class="search-container">
+                                <input type="text" id="search-input" placeholder="Search by name, role, or status...">
+                            </div>
+                            <table id="hipo-table">
+                                <thead>
+                                    <tr>
+                                        <th data-sort="name">Name</th>
+                                        <th data-sort="role">Target Role</th>
+                                        <th data-sort="placement">9-Box Placement</th>
+                                        <th data-sort="status">Readiness Status</th>
+                                        <th data-sort="completion">IDP Completion</th>
+                                        <th data-sort="risk">AI Flight Risk Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-name="Anya Sharma">
+                                        <td><a href="#" class="name-link">Anya Sharma</a></td>
+                                        <td>VP Operations</td>
+                                        <td>High Perf / High Pot</td>
+                                        <td>Soon</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 75%"></div></div></td>
+                                        <td>3.2</td>
+                                    </tr>
+                                    <tr data-name="John Doe">
+                                        <td><a href="#" class="name-link">John Doe</a></td>
+                                        <td>Director Finance</td>
+                                        <td>High Perf / High Pot</td>
+                                        <td>Ready Now</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 90%"></div></div></td>
+                                        <td>1.5</td>
+                                    </tr>
+                                    <tr data-name="Jane Smith">
+                                        <td><a href="#" class="name-link">Jane Smith</a></td>
+                                        <td>Senior Manager HR</td>
+                                        <td>High Perf / Med Pot</td>
+                                        <td>Future</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 45%"></div></div></td>
+                                        <td>4.1</td>
+                                    </tr>
+                                    <tr data-name="Alice Brown">
+                                        <td><a href="#" class="name-link">Alice Brown</a></td>
+                                        <td>Chief Technology Officer</td>
+                                        <td>Med Perf / High Pot</td>
+                                        <td>Soon</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 60%"></div></div></td>
+                                        <td>2.8</td>
+                                    </tr>
+                                    <tr data-name="Bob Wilson">
+                                        <td><a href="#" class="name-link">Bob Wilson</a></td>
+                                        <td>VP Marketing</td>
+                                        <td>Med Perf / Med Pot</td>
+                                        <td>Ready Now</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 85%"></div></div></td>
+                                        <td>1.9</td>
+                                    </tr>
+                                    <tr data-name="Charlie Davis">
+                                        <td><a href="#" class="name-link">Charlie Davis</a></td>
+                                        <td>Director Sales</td>
+                                        <td>High Perf / High Pot</td>
+                                        <td>Soon</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 70%"></div></div></td>
+                                        <td>3.5</td>
+                                    </tr>
+                                    <tr data-name="Diana Evans">
+                                        <td><a href="#" class="name-link">Diana Evans</a></td>
+                                        <td>Senior Manager IT</td>
+                                        <td>Med Perf / High Pot</td>
+                                        <td>Future</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 30%"></div></div></td>
+                                        <td>4.7</td>
+                                    </tr>
+                                    <tr data-name="Edward Foster">
+                                        <td><a href="#" class="name-link">Edward Foster</a></td>
+                                        <td>VP Supply Chain</td>
+                                        <td>High Perf / Med Pot</td>
+                                        <td>Ready Now</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 95%"></div></div></td>
+                                        <td>1.2</td>
+                                    </tr>
+                                    <tr data-name="Fiona Garcia">
+                                        <td><a href="#" class="name-link">Fiona Garcia</a></td>
+                                        <td>Director Legal</td>
+                                        <td>Low Perf / High Pot</td>
+                                        <td>Future</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 20%"></div></div></td>
+                                        <td>5.0</td>
+                                    </tr>
+                                    <tr data-name="George Harris">
+                                        <td><a href="#" class="name-link">George Harris</a></td>
+                                        <td>Senior Manager Procurement</td>
+                                        <td>Med Perf / Med Pot</td>
+                                        <td>Soon</td>
+                                        <td><div class="progress-bar"><div class="progress" style="width: 55%"></div></div></td>
+                                        <td>3.8</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="interventions-trends">
+                            <div class="alerts">
+                                <h4>Alert Feed</h4>
+                                <div class="alert alert-high">High flight risk: Anya Sharma (Score: 3.2)</div>
+                                <div class="alert alert-medium">IDP overdue: John Doe</div>
+                                <div class="alert alert-low">New HiPo identified: Jane Smith</div>
+                            </div>
+                            <div class="trends">
+                                <h4>Gap Closure Trend</h4>
+                                <canvas id="trend-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <button class="export-btn">Export to Sheets</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My IDP View -->
+            <div id="idp-view" class="view">
+                <div class="idp-header">
+                    <h2>Anya Sharma</h2>
+                    <p>Senior Manager, Operations</p>
+                </div>
+
+                <div class="idp-content">
+                    <div class="readiness-gauge">
+                        <h3>Personal Readiness</h3>
+                        <div class="gauge-large" id="readiness-gauge">78%</div>
+                        <p>14 months to target readiness</p>
+                    </div>
+
+                    <div class="radar-chart">
+                        <h3>Competency Assessment</h3>
+                        <canvas id="radar-chart"></canvas>
+                    </div>
+
+                    <div class="idp-activities">
+                        <h3>IDP Activities</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Activity Name</th>
+                                    <th>Type</th>
+                                    <th>Target Gap</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Leadership Training Module</td>
+                                    <td><span class="pill training">Training</span></td>
+                                    <td>Strategic Thinking</td>
+                                    <td>Dec 2025</td>
+                                    <td><input type="checkbox" class="status-checkbox"></td>
+                                </tr>
+                                <tr>
+                                    <td>Job Rotation: Finance Dept</td>
+                                    <td><span class="pill rotation">Rotation</span></td>
+                                    <td>Financial Acumen</td>
+                                    <td>Mar 2026</td>
+                                    <td><input type="checkbox" class="status-checkbox"></td>
+                                </tr>
+                                <!-- Add more rows -->
+                            </tbody>
+                        </table>
+                        <button class="export-btn">Export to Sheets</button>
+                    </div>
+
+                    <div class="mentor-card">
+                        <h3>Mentor</h3>
+                        <div class="mentor-info">
+                            <div class="mentor-avatar"></div>
+                            <div class="mentor-details">
+                                <h4>Mr. K. Sharma</h4>
+                                <p>Expertise: Operations, Leadership</p>
+                                <p>AI Match Quality: 9.2/10</p>
+                                <button class="request-btn">Request Check-in</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2025 POWERGRID. All rights reserved.</p>
+            <div class="problem-statement">
+                <h4>Problem Statement</h4>
+                <p>The POWERGRID Succession Planning & Leadership Development Policy outlines the creation of Individual Development Plans (IDPs) for potential successors based on their position in a 9-Box Performance-Potential Matrix. The policy provides suggestive guidelines for development, such as job rotation, leadership training and performance coaching. However, manually creating truly personalized and impactful development plans for each potential leader is a significant challenge for the Succession Planning Committee.</p>
+                <p>An AI-powered solution can bridge the gap between generic suggestions and effective, tailored development roadmaps. The system can perform a granular analysis of an employee's profile against the specific requirements of a target key role, identifying precise gaps in knowledge, skills (functional/geographical), and leadership abilities. By leveraging data on available projects, internal trainings, and senior leader expertise, the solution can create a dynamic, actionable, and prioritized development plan that maximizes the employee's potential and aligns with organizational needs for future leadership.</p>
+                <p>The expected solution is a software that takes an employee's profile and a target role's "Success Profile" as input, identifies competency gaps, recommends personalized development activities, and provides a dashboard for tracking progress.</p>
+            </div>
+        </footer>
+
+        <!-- Modal for Successor IDP -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div id="modal-body">
+                    <!-- Content will be populated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">Activity completed!</div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

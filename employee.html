@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POWERGRID — My Leadership Growth (Employee)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="auth.js"></script>
+  <style>
+    @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+    .slide-up { animation: slideInUp 0.6s ease-out; }
+    .slide-up-delay-1 { animation: slideInUp 0.6s ease-out 0.1s both; }
+    .slide-up-delay-2 { animation: slideInUp 0.6s ease-out 0.2s both; }
+    .slide-up-delay-3 { animation: slideInUp 0.6s ease-out 0.3s both; }
+    .fade-in { animation: fadeIn 1s ease-out; }
+    .ai-typing { animation: pulse 1.5s ease-in-out infinite; }
+    .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+    .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+    .progress-animate { transition: width 1s ease-out; }
+    .shimmer-bg {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+  <header class="bg-white shadow p-4">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <img src="https://via.placeholder.com/140x38/4F46E5/fff?text=POWERGRID" alt="logo" class="h-8">
+        <h1 class="text-lg font-bold">My Leadership Growth</h1>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="admin.html" class="text-sm text-indigo-600 hover:underline">Switch to Admin Portal</a>
+        <button id="logout-btn" class="px-3 py-1 bg-indigo-600 text-white rounded">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Top: Welcome + Readiness -->
+    <section class="slide-up lg:col-span-3 card p-6 flex flex-col md:flex-row items-center justify-between hover-lift bg-gradient-to-r from-indigo-50 to-purple-50 border-l-4 border-indigo-600">
+      <div>
+        <h2 class="text-2xl font-bold">Welcome, <span id="emp-name">Anya Sharma</span></h2>
+        <p class="text-gray-600">Target Role: <span id="emp-target" class="font-semibold text-indigo-600">VP Operations</span></p>
+        <div class="mt-2 text-sm text-gray-500">Last login: <span id="last-login">Today at 9:30 AM</span></div>
+      </div>
+      <div class="text-center mt-4 md:mt-0">
+        <div class="text-sm text-gray-500 mb-1">Readiness Score</div>
+        <div id="readiness" class="text-5xl font-extrabold text-indigo-600 mb-1">78%</div>
+        <div class="text-xs text-gray-500">Estimated time to ready: <span id="time-to-ready" class="font-semibold">14 months</span></div>
+        <div class="mt-3">
+          <div class="h-2 w-32 bg-gray-200 rounded-full overflow-hidden mx-auto">
+            <div class="h-full bg-gradient-to-r from-indigo-600 to-purple-600 progress-animate" style="width: 78%"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Middle: Gap/Radar + Recommendations -->
+    <section class="slide-up-delay-1 card p-6 lg:col-span-1 hover-lift">
+      <h3 class="font-bold mb-3 text-lg flex items-center gap-2">
+        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        Gap Analysis
+      </h3>
+      <canvas id="radarEmployee" width="300" height="300"></canvas>
+      <div class="mt-4 space-y-2">
+        <button id="download-idp" class="export-btn w-full flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Download IDP PDF
+        </button>
+      </div>
+    </section>
+
+    <section class="slide-up-delay-2 card p-6 lg:col-span-2 hover-lift">
+      <h3 class="font-bold mb-3 text-lg flex items-center gap-2">
+        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+        </svg>
+        Personalized IDP & Recommendations
+      </h3>
+      <table class="w-full text-sm mb-4">
+        <thead>
+          <tr class="text-left text-xs text-gray-600 border-b">
+            <th class="pb-3">Activity</th>
+            <th class="pb-3">Type</th>
+            <th class="pb-3">Predicted Impact</th>
+            <th class="pb-3">Status</th>
+          </tr>
+        </thead>
+        <tbody id="rec-table">
+        </tbody>
+      </table>
+
+      <div class="mt-6 pt-4 border-t">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="font-semibold flex items-center gap-2">
+            <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>
+            AI Coach — Daily Insight
+          </h4>
+          <button onclick="getNewAITip()" class="text-xs px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full hover:bg-indigo-200 transition">Get New Tip</button>
+        </div>
+        <div id="ai-coach" class="p-4 rounded-lg bg-gradient-to-r from-indigo-50 to-purple-50 border border-indigo-100">
+          <div class="flex items-start gap-3">
+            <div class="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center flex-shrink-0">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <div id="ai-message" class="text-sm text-gray-700 leading-relaxed">Focus on completing your Strategic Leadership module this week. Your progress shows strong engagement—keep it up!</div>
+          </div>
+        </div>
+        <button onclick="openAIChat()" class="mt-3 w-full py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          Chat with AI Coach
+        </button>
+      </div>
+    </section>
+
+    <!-- My Development Plans Section -->
+    <section class="slide-up-delay-3 card p-6 lg:col-span-3 hover-lift">
+      <h3 class="font-bold mb-4 text-lg flex items-center gap-2">
+        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        My Development Plans
+        <span id="idp-count" class="ml-2 px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">0</span>
+      </h3>
+      <div id="idp-container" class="space-y-4">
+        <!-- IDPs will be rendered here -->
+      </div>
+    </section>
+
+    <!-- Bottom: Timeline + Mentor -->
+    <section class="slide-up-delay-3 card p-6 lg:col-span-2 hover-lift">
+      <h3 class="font-bold mb-3 text-lg flex items-center gap-2">
+        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+        </svg>
+        Progress Tracker
+      </h3>
+      <div id="timeline" class="space-y-3 text-sm text-gray-700"></div>
+    </section>
+
+    <aside class="slide-up-delay-3 card p-6 lg:col-span-1 hover-lift">
+      <h3 class="font-bold mb-3 text-lg flex items-center gap-2">
+        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        Mentor
+      </h3>
+      <div class="flex items-center gap-4">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white flex items-center justify-center font-bold text-xl shadow-lg">KS</div>
+        <div class="flex-1">
+          <div class="font-semibold text-lg">Mr. K. Sharma</div>
+          <div class="text-xs text-gray-500">Expertise: Operations, Leadership</div>
+          <div class="mt-1 flex items-center gap-1 text-xs text-yellow-600">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+            AI Match Quality: 9.2/10
+          </div>
+        </div>
+      </div>
+      <div class="mt-4">
+        <button id="request-checkin" class="request-btn w-full flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          Request Check-in
+        </button>
+      </div>
+
+      <div class="mt-6 pt-4 border-t">
+        <h4 class="font-semibold mb-3 flex items-center gap-2">
+          <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+          </svg>
+          Rewards & Badges
+        </h4>
+        <div class="flex gap-2 flex-wrap">
+          <div class="px-3 py-2 rounded-lg bg-gradient-to-r from-green-100 to-green-200 text-green-800 text-xs font-semibold flex items-center gap-1">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            On-Track
+          </div>
+          <div class="px-3 py-2 rounded-lg bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-800 text-xs font-semibold flex items-center gap-1">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+            Mentorship Active
+          </div>
+          <div class="px-3 py-2 rounded-lg bg-gradient-to-r from-purple-100 to-purple-200 text-purple-800 text-xs font-semibold flex items-center gap-1">
+            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+            3 Trainings Done
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- AI Chat Modal -->
+  <div id="ai-chat-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" onclick="if(event.target === this) closeAIChat()">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col" onclick="event.stopPropagation()">
+      <div class="p-6 border-b bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-t-2xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-lg">AI Leadership Coach</h3>
+              <p class="text-xs text-indigo-100">Ask me anything about your development plan</p>
+            </div>
+          </div>
+          <button onclick="closeAIChat()" class="p-2 hover:bg-white/20 rounded-lg transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4">
+        <!-- Messages will be added here -->
+      </div>
+      <div class="p-4 border-t bg-gray-50 rounded-b-2xl">
+        <form id="chat-form" class="flex gap-2">
+          <input type="text" id="chat-input" placeholder="Ask a question..." class="flex-1 px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-600">
+          <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+            </svg>
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="portal.js"></script>
+  <script>
+    // Check authentication on page load
+    window.addEventListener('DOMContentLoaded', function() {
+      const currentUser = AuthManager.getCurrentUser();
+      const session = JSON.parse(sessionStorage.getItem('powergrid_session') || '{}');
+      
+      // If no authenticated user and no demo session, redirect to login
+      if (!currentUser && !session.isDemo) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Load user-specific data
+      if (currentUser) {
+        loadUserData(currentUser);
+      } else if (session.isDemo) {
+        // Load demo data for demo user
+        loadDemoData();
+      }
+    });
+    
+    // Load data for authenticated user
+    function loadUserData(user) {
+      // Update welcome section with user's name
+      document.getElementById('emp-name').textContent = user.name;
+      
+      // Initialize profile data if this is a new user
+      if (!user.profileData || !user.profileData.competencies) {
+        // Generate initial profile based on position
+        const initialProfile = generateInitialProfile(user);
+        AuthManager.updateUserProfile(initialProfile);
+        user.profileData = initialProfile;
+      }
+      
+      // Display user's target role (or default based on position)
+      const targetRole = user.profileData.targetRole || getTargetRoleForPosition(user.position);
+      document.getElementById('emp-target').textContent = targetRole;
+      
+      // Calculate and display readiness score
+      const readinessScore = calculateReadiness(user.profileData.competencies, targetRole);
+      document.getElementById('readiness').textContent = readinessScore + '%';
+      
+      // Update progress bar
+      const progressBar = document.querySelector('.progress-animate');
+      if (progressBar) {
+        progressBar.style.width = readinessScore + '%';
+      }
+      
+      // Calculate time to ready
+      const monthsToReady = Math.ceil((100 - readinessScore) / 5); // Rough estimate
+      document.getElementById('time-to-ready').textContent = monthsToReady + ' months';
+      
+      // Update last login
+      document.getElementById('last-login').textContent = new Date().toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+      });
+      
+      // Render charts and IDP with user's data
+      renderUserCharts(user);
+      renderUserIDP(user);
+      renderAdminCreatedIDPs(user);
+      renderProgressTimeline(user);
+    }
+    
+    // Load demo data (for demo accounts)
+    function loadDemoData() {
+      // Keep existing demo data display
+      console.log('Loading demo data...');
+    }
+    
+    // Generate initial profile for new users
+    function generateInitialProfile(user) {
+      const position = user.position || 'Manager';
+      const targetRole = getTargetRoleForPosition(position);
+      
+      // Generate random but realistic competency scores (60-80 range for new users)
+      const competencies = {
+        'Strategic Thinking': Math.floor(Math.random() * 20) + 60,
+        'People Leadership': Math.floor(Math.random() * 20) + 60,
+        'Financial Acumen': Math.floor(Math.random() * 20) + 55,
+        'Change Management': Math.floor(Math.random() * 20) + 60,
+        'Innovation': Math.floor(Math.random() * 20) + 65,
+        'Execution': Math.floor(Math.random() * 20) + 70
+      };
+      
+      return {
+        targetRole: targetRole,
+        competencies: competencies,
+        idp: [],
+        mentor: assignMentor(targetRole),
+        progress: 0,
+        badges: []
+      };
+    }
+    
+    // Get target role based on current position
+    function getTargetRoleForPosition(position) {
+      const roleMapping = {
+        'Manager': 'Senior Manager',
+        'Senior Manager': 'Director',
+        'Director': 'VP Operations',
+        'Senior Developer': 'Engineering Manager',
+        'Team Lead': 'Director',
+        'Analyst': 'Senior Analyst'
+      };
+      return roleMapping[position] || 'VP Operations';
+    }
+    
+    // Calculate readiness score
+    function calculateReadiness(competencies, targetRole) {
+      if (!competencies) return 0;
+      
+      // Target scores for different roles
+      const targetScores = {
+        'VP Operations': 90,
+        'Director': 85,
+        'Senior Manager': 80,
+        'Engineering Manager': 82,
+        'Senior Analyst': 75
+      };
+      
+      const targetScore = targetScores[targetRole] || 85;
+      const avgScore = Object.values(competencies).reduce((a, b) => a + b, 0) / Object.keys(competencies).length;
+      
+      return Math.min(Math.round((avgScore / targetScore) * 100), 99);
+    }
+    
+    // Assign a mentor based on target role
+    function assignMentor(targetRole) {
+      const mentors = {
+        'VP Operations': { name: 'Dr. Rajesh Kumar', title: 'SVP Operations', match: 9.2 },
+        'Director': { name: 'Sarah Chen', title: 'VP Strategy', match: 8.9 },
+        'Senior Manager': { name: 'Michael Torres', title: 'Director, HR', match: 8.7 },
+        'Engineering Manager': { name: 'Dr. Priya Gupta', title: 'VP Engineering', match: 9.1 },
+        'Senior Analyst': { name: 'David Kim', title: 'Senior Director', match: 8.5 }
+      };
+      return mentors[targetRole] || mentors['VP Operations'];
+    }
+    
+    // Render charts with user's data
+    function renderUserCharts(user) {
+      const competencies = user.profileData.competencies;
+      const targetRole = user.profileData.targetRole;
+      
+      // Render radar chart
+      const ctx = document.getElementById('radarEmployee');
+      if (ctx) {
+        renderRadarChart(ctx, competencies, targetRole);
+      }
+    }
+    
+    // Render IDP recommendations for user
+    function renderUserIDP(user) {
+      const tableBody = document.getElementById('rec-table');
+      if (!tableBody) return;
+      
+      // Generate IDP based on competency gaps
+      const gaps = findCompetencyGaps(user.profileData.competencies);
+      const recommendations = generateRecommendations(gaps);
+      
+      tableBody.innerHTML = recommendations.map((rec, idx) => `
+        <tr class="border-b hover:bg-gray-50 transition">
+          <td class="py-3">${rec.activity}</td>
+          <td class="py-3"><span class="px-2 py-1 rounded text-xs bg-blue-100 text-blue-700">${rec.type}</span></td>
+          <td class="py-3 text-green-600 font-semibold">${rec.impact}</td>
+          <td class="py-3">
+            <span class="px-2 py-1 rounded text-xs ${rec.status === 'In Progress' ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600'}">
+              ${rec.status}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+    
+    // Find competency gaps
+    function findCompetencyGaps(competencies) {
+      const gaps = [];
+      const targetScore = 85;
+      
+      for (const [skill, score] of Object.entries(competencies)) {
+        if (score < targetScore) {
+          gaps.push({ skill, gap: targetScore - score });
+        }
+      }
+      
+      return gaps.sort((a, b) => b.gap - a.gap).slice(0, 3);
+    }
+    
+    // Generate recommendations based on gaps
+    function generateRecommendations(gaps) {
+      const activities = {
+        'Strategic Thinking': [
+          { activity: 'Strategic Leadership Workshop', type: 'Training', impact: '+15%', status: 'Not Started' },
+          { activity: 'Cross-functional Project Lead', type: 'Job Rotation', impact: '+12%', status: 'In Progress' }
+        ],
+        'People Leadership': [
+          { activity: 'Executive Coaching Program', type: 'Mentorship', impact: '+18%', status: 'Not Started' },
+          { activity: 'Team Building Workshop', type: 'Training', impact: '+10%', status: 'Not Started' }
+        ],
+        'Financial Acumen': [
+          { activity: 'Finance for Non-Finance Leaders', type: 'Training', impact: '+20%', status: 'Not Started' },
+          { activity: 'Budget Planning Rotation', type: 'Job Rotation', impact: '+15%', status: 'Not Started' }
+        ],
+        'Change Management': [
+          { activity: 'Change Leadership Certification', type: 'Training', impact: '+17%', status: 'Not Started' },
+          { activity: 'Digital Transformation Project', type: 'Enrichment', impact: '+14%', status: 'In Progress' }
+        ],
+        'Innovation': [
+          { activity: 'Innovation Lab Participation', type: 'Enrichment', impact: '+16%', status: 'Not Started' },
+          { activity: 'Design Thinking Workshop', type: 'Training', impact: '+12%', status: 'Not Started' }
+        ],
+        'Execution': [
+          { activity: 'Agile Project Management', type: 'Training', impact: '+13%', status: 'Not Started' },
+          { activity: 'Operations Excellence Program', type: 'Job Rotation', impact: '+15%', status: 'In Progress' }
+        ]
+      };
+      
+      const recommendations = [];
+      gaps.forEach(gap => {
+        const skillActivities = activities[gap.skill] || [];
+        recommendations.push(...skillActivities);
+      });
+      
+      return recommendations.slice(0, 4);
+    }
+    
+    // Render Admin-Created IDPs
+    function renderAdminCreatedIDPs(user) {
+      const container = document.getElementById('idp-container');
+      const countBadge = document.getElementById('idp-count');
+      
+      if (!container || !countBadge) return;
+      
+      // Get IDPs from user profile
+      const idps = user.profileData?.idps || [];
+      countBadge.textContent = idps.length;
+      
+      if (idps.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-8 text-gray-500">
+            <svg class="w-16 h-16 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <p class="font-semibold mb-1">No Development Plans Yet</p>
+            <p class="text-sm">Your HR admin will create personalized development plans for you</p>
+          </div>
+        `;
+        return;
+      }
+      
+      container.innerHTML = idps.map((idp, index) => {
+        const progress = idp.progress || 0;
+        const completedActivities = idp.activities?.filter(a => a.completed).length || 0;
+        const totalActivities = idp.activities?.length || 0;
+        const createdDate = new Date(idp.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const lastUpdated = idp.lastUpdated ? new Date(idp.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Not updated yet';
+        
+        return `
+          <div class="border rounded-lg p-6 bg-gradient-to-r from-blue-50 to-indigo-50 hover:shadow-lg transition">
+            <div class="flex justify-between items-start mb-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <h4 class="text-xl font-bold text-gray-800">${idp.targetRole}</h4>
+                  <span class="px-3 py-1 bg-indigo-600 text-white rounded-full text-xs font-semibold">${idp.timeline} Months</span>
+                </div>
+                <p class="text-sm text-gray-600">Created on ${createdDate} • Last updated: ${lastUpdated}</p>
+              </div>
+              <div class="text-center">
+                <div class="text-3xl font-bold text-indigo-600">${progress}%</div>
+                <div class="text-xs text-gray-500">Complete</div>
+              </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="mb-4">
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-gray-600">Overall Progress</span>
+                <span class="text-gray-600">${completedActivities}/${totalActivities} activities completed</span>
+              </div>
+              <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-indigo-600 to-blue-600 transition-all duration-500" style="width: ${progress}%"></div>
+              </div>
+            </div>
+            
+            <!-- Focus Areas -->
+            <div class="mb-4">
+              <h5 class="font-semibold text-sm text-gray-700 mb-2 flex items-center gap-2">
+                <svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Focus Competencies
+              </h5>
+              <div class="flex flex-wrap gap-2">
+                ${idp.competencies.map(comp => `
+                  <span class="px-3 py-1 bg-white rounded-full text-xs font-semibold text-indigo-700 border border-indigo-200">${comp}</span>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Activities -->
+            <div class="mb-4">
+              <h5 class="font-semibold text-sm text-gray-700 mb-3 flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+                Development Activities
+              </h5>
+              <div class="space-y-2">
+                ${idp.activities.map(activity => `
+                  <div class="flex items-center gap-3 p-3 bg-white rounded-lg border ${activity.completed ? 'border-green-200 bg-green-50' : 'border-gray-200'}">
+                    <div class="flex-shrink-0">
+                      ${activity.completed ? 
+                        '<svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>' :
+                        '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                      }
+                    </div>
+                    <div class="flex-1">
+                      <div class="font-semibold text-sm ${activity.completed ? 'text-green-700' : 'text-gray-700'}">${activity.name}</div>
+                      <div class="text-xs text-gray-500">${activity.type} • ${activity.duration}</div>
+                    </div>
+                    <span class="px-2 py-1 rounded text-xs font-semibold ${activity.completed ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">
+                      ${activity.completed ? 'Completed' : 'In Progress'}
+                    </span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            
+            <!-- Mentor -->
+            ${idp.mentor ? `
+              <div class="mb-4 p-3 bg-white rounded-lg border border-gray-200">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 text-white flex items-center justify-center font-bold">
+                    ${idp.mentor.charAt(0)}
+                  </div>
+                  <div>
+                    <div class="text-xs text-gray-500">Assigned Mentor</div>
+                    <div class="font-semibold text-sm">${idp.mentor}</div>
+                  </div>
+                </div>
+              </div>
+            ` : ''}
+            
+            <!-- Progress Notes -->
+            ${idp.progressNotes ? `
+              <div class="mb-4">
+                <h5 class="font-semibold text-sm text-gray-700 mb-2 flex items-center gap-2">
+                  <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                  Progress Notes from Admin
+                </h5>
+                <div class="p-3 bg-blue-50 rounded-lg border border-blue-200 text-sm text-gray-700">
+                  ${idp.progressNotes}
+                </div>
+              </div>
+            ` : ''}
+            
+            <!-- Next Steps -->
+            ${idp.nextSteps ? `
+              <div class="mb-4">
+                <h5 class="font-semibold text-sm text-gray-700 mb-2 flex items-center gap-2">
+                  <svg class="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                  </svg>
+                  Next Steps
+                </h5>
+                <div class="p-3 bg-orange-50 rounded-lg border border-orange-200 text-sm text-gray-700">
+                  ${idp.nextSteps}
+                </div>
+              </div>
+            ` : ''}
+            
+            <!-- Additional Notes -->
+            ${idp.notes ? `
+              <div>
+                <h5 class="font-semibold text-sm text-gray-700 mb-2">Additional Notes</h5>
+                <div class="p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+                  ${idp.notes}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // Render Progress Timeline
+    function renderProgressTimeline(user) {
+      const timeline = document.getElementById('timeline');
+      if (!timeline) return;
+      
+      const idps = user.profileData?.idps || [];
+      
+      if (idps.length === 0) {
+        timeline.innerHTML = `
+          <div class="text-center py-4 text-gray-500">
+            <p class="text-sm">Your progress timeline will appear here once development plans are created</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Generate timeline from all activities
+      const allActivities = [];
+      idps.forEach((idp, idpIndex) => {
+        idp.activities?.forEach((activity, actIndex) => {
+          allActivities.push({
+            name: activity.name,
+            type: activity.type,
+            completed: activity.completed,
+            idpName: idp.targetRole,
+            progress: idp.progress || 0
+          });
+        });
+      });
+      
+      timeline.innerHTML = allActivities.map((activity, index) => `
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 mt-1">
+            ${activity.completed ? 
+              '<svg class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>' :
+              '<svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            }
+          </div>
+          <div class="flex-1">
+            <div class="font-semibold ${activity.completed ? 'text-green-700' : 'text-gray-700'}">${activity.name}</div>
+            <div class="text-xs text-gray-500">${activity.type} • ${activity.idpName}</div>
+          </div>
+          <span class="px-2 py-1 rounded text-xs font-semibold ${activity.completed ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}">
+            ${activity.completed ? '✓ Done' : 'In Progress'}
+          </span>
+        </div>
+      `).join('');
+    }
+    
+    // Logout handler
+    document.getElementById('logout-btn').addEventListener('click', function() {
+      AuthManager.logout();
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
