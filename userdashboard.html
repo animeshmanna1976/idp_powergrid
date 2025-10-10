@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Leadership Growth | Employee Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #06d6a0;
+            --accent: #f72585;
+            --warning: #ff9e00;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --card-bg: #ffffff;
+            --sidebar-bg: #1e293b;
+            --header-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .portal-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--header-bg);
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-light);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 5px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-1 { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+        .icon-2 { background: linear-gradient(135deg, #06d6a0, #0db39e); }
+        .icon-3 { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+        .icon-4 { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+        .icon-5 { background: linear-gradient(135deg, #ec4899, #f472b6); }
+        .icon-6 { background: linear-gradient(135deg, #10b981, #34d399); }
+        .icon-7 { background: linear-gradient(135deg, #3b82f6, #60a5fa); }
+        .icon-8 { background: linear-gradient(135deg, #f97316, #fb923c); }
+        .icon-9 { background: linear-gradient(135deg, #64748b, #94a3b8); }
+
+        .card-content {
+            flex-grow: 1;
+            margin-bottom: 20px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .card-stats {
+            font-size: 14px;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-action:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Progress Section */
+        .progress-container {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .progress-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 10px;
+            width: 65%;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            height: 400px;
+        }
+
+        /* Badges Section */
+        .badges-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f1f5f9;
+            padding: 10px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+        }
+
+        .badge i {
+            color: var(--warning);
+        }
+
+        /* Mentor Section */
+        .mentor-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+        }
+
+        .mentor-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* AI Chatbot */
+        .chatbot-container {
+            position: relative;
+            height: 200px;
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            background: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            max-width: 80%;
+        }
+
+        .chat-message.bot {
+            background: var(--primary);
+            color: white;
+            align-self: flex-start;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chat-input button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Learning Modules */
+        .modules-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .module {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .module:hover {
+            background: var(--primary-light);
+            color: white;
+        }
+
+        .module i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-cards {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .portal-container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .card-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .card-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .card-action {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-area">
+                <div class="logo">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>My Leadership Growth</h1>
+                    <p>Your personalized career development portal</p>
+                </div>
+            </div>
+            <div class="user-info">
+                <div>
+                    <p>Welcome, <strong>Alex Johnson</strong></p>
+                    <p style="font-size: 14px; color: var(--gray);">Senior Marketing Manager</p>
+                </div>
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Profile">
+            </div>
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="progress-container">
+            <div class="progress-header">
+                <div class="progress-title">My Development Progress</div>
+                <div class="progress-percent">65% Complete</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-info">
+                <div>Target Role: Director of Marketing</div>
+                <div>Estimated Completion: 4 months</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Cards -->
+        <div class="dashboard-cards">
+            <!-- Card 1: My Profile -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-id-card"></i>
+                        My Profile
+                    </div>
+                    <div class="card-icon icon-1">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    View and manage your personal data including name, role, department, experience, and target role information.
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-sync-alt"></i> Updated 2 days ago
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: Gap Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-chart-radar"></i>
+                        Gap Analysis
+                    </div>
+                    <div class="card-icon icon-2">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    Visualize your current skills versus target skills with an interactive radar chart to identify development areas.
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-chart-line"></i> 5 skills to develop
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-chart-pie"></i> View Analysis
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: Personalized IDP -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-road"></i>
+                        Personalized IDP
+                    </div>
+                    <div class="card-icon icon-3">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    Access your AI-generated Individual Development Plan with recommended courses, job rotations, and mentorships.
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-tasks"></i> 12 activities planned
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-eye"></i> View Plan
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 4: Learning Hub -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Learning Hub
+                    </div>
+                    <div class="card-icon icon-4">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    Explore recommended internal and external training modules tailored to your development needs.
+                    <div class="modules-container">
+                        <div class="module">
+                            <i class="fas fa-chart-line"></i>
+                            <div>Leadership</div>
+                        </div>
+                        <div class="module">
+                            <i class="fas fa-users"></i>
+                            <div>Team Mgmt</div>
+                        </div>
+                        <div class="module">
+                            <i class="fas fa-comments"></i>
+                            <div>Communication</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-play-circle"></i> 5 courses available
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-search"></i> Browse Courses
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 5: Mentorship Section -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-handshake"></i>
+                        Mentorship
+                    </div>
+                    <div class="card-icon icon-5">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    View your assigned mentor, session schedules, and progress notes from your mentorship journey.
+                    <div class="mentor-info">
+                        <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Mentor">
+                        <div>
+                            <h4>Sarah Williams</h4>
+                            <p>Director of Marketing</p>
+                            <p>Next session: Oct 15, 2023</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-clock"></i> 6 sessions completed
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-calendar"></i> Schedule
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 6: Progress Tracker -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-tasks"></i>
+                        Progress Tracker
+                    </div>
+                    <div class="card-icon icon-6">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    Track your development journey with a visual timeline showing completed versus pending development tasks.
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-check-circle"></i> 8 of 12 tasks done
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-stream"></i> View Timeline
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 7: AI Coach / Chatbot -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-robot"></i>
+                        AI Coach
+                    </div>
+                    <div class="card-icon icon-7">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    Get daily tips, motivational messages, and personalized learning suggestions from your AI coach.
+                    <div class="chatbot-container">
+                        <div class="chat-message bot">
+                            Hi Alex! Ready to work on your leadership skills today?
+                        </div>
+                        <div class="chat-message">
+                            Yes, any suggestions?
+                        </div>
+                        <div class="chat-message bot">
+                            Try the "Effective Delegation" module. It matches your goals!
+                        </div>
+                        <div class="chat-input">
+                            <input type="text" placeholder="Ask your AI coach...">
+                            <button><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-brain"></i> Always available
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-comment"></i> Chat Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 8: Rewards & Badges -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-trophy"></i>
+                        Rewards & Badges
+                    </div>
+                    <div class="card-icon icon-8">
+                        <i class="fas fa-award"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    Celebrate your achievements! View milestones, badges, and recognition for your development progress.
+                    <div class="badges-container">
+                        <div class="badge">
+                            <i class="fas fa-medal"></i>
+                            <span>Leadership Star</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-certificate"></i>
+                            <span>Course Complete</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-star"></i>
+                            <span>Mentorship Pro</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-gem"></i> 3 badges earned
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-trophy"></i> View All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 9: Download IDP PDF -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <i class="fas fa-file-pdf"></i>
+                        Download IDP
+                    </div>
+                    <div class="card-icon icon-9">
+                        <i class="fas fa-download"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    Download your personalized Individual Development Plan as a comprehensive PDF report to share with your manager.
+                </div>
+                <div class="card-footer">
+                    <div class="card-stats">
+                        <i class="fas fa-file-alt"></i> Last updated: Oct 1, 2023
+                    </div>
+                    <button class="card-action">
+                        <i class="fas fa-file-download"></i> Download PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gap Analysis Chart -->
+        <div class="chart-container">
+            <div class="progress-header">
+                <div class="progress-title">Skills Gap Analysis</div>
+                <div class="card-action">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </div>
+            </div>
+            <canvas id="gapAnalysisChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Initialize the radar chart for gap analysis
+        const ctx = document.getElementById('gapAnalysisChart').getContext('2d');
+        const gapAnalysisChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: ['Strategic Thinking', 'Team Leadership', 'Communication', 'Decision Making', 'Innovation', 'Financial Acumen'],
+                datasets: [{
+                    label: 'Current Skills',
+                    data: [65, 70, 80, 60, 55, 45],
+                    backgroundColor: 'rgba(79, 70, 229, 0.2)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                }, {
+                    label: 'Target Skills',
+                    data: [85, 90, 85, 80, 75, 70],
+                    backgroundColor: 'rgba(6, 214, 160, 0.2)',
+                    borderColor: 'rgba(6, 214, 160, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(6, 214, 160, 1)',
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // Add interactivity to the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effect to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add click effect to buttons
+            const buttons = document.querySelectorAll('.card-action');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                    
+                    // Show a simple alert for demo purposes
+                    const cardTitle = this.closest('.card').querySelector('.card-title').textContent.trim();
+                    alert(`Opening ${cardTitle} feature...`);
+                });
+            });
+
+            // Simple chatbot functionality
+            const chatInput = document.querySelector('.chat-input input');
+            const chatButton = document.querySelector('.chat-input button');
+            
+            chatButton.addEventListener('click', function() {
+                if (chatInput.value.trim() !== '') {
+                    const chatbotContainer = document.querySelector('.chatbot-container');
+                    const userMessage = document.createElement('div');
+                    userMessage.className = 'chat-message';
+                    userMessage.textContent = chatInput.value;
+                    
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'chat-message bot';
+                    botMessage.textContent = "Thanks for your message! I'll help you with that in our next interaction.";
+                    
+                    chatbotContainer.insertBefore(userMessage, chatbotContainer.lastElementChild);
+                    chatbotContainer.insertBefore(botMessage, chatbotContainer.lastElementChild);
+                    
+                    chatInput.value = '';
+                    chatbotContainer.scrollTop = chatbotContainer.scrollHeight;
+                }
+            });
+            
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    chatButton.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

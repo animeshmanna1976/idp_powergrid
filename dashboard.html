@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TalentFlow | Employee Development Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --success: #4cc9f0;
+            --warning: #f8961e;
+            --danger: #e63946;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --card-bg: #ffffff;
+            --sidebar-bg: #1a1f36;
+            --header-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 24px 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 0 24px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .logo i {
+            font-size: 28px;
+            margin-right: 12px;
+            color: var(--success);
+        }
+
+        .logo h1 {
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(to right, #4cc9f0, #4361ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            margin-top: 20px;
+        }
+
+        .nav-links li {
+            list-style: none;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            cursor: pointer;
+            margin: 4px 0;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-links li:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--success);
+        }
+
+        .nav-links li.active {
+            background: rgba(67, 97, 238, 0.15);
+            border-left: 4px solid var(--primary);
+        }
+
+        .nav-links i {
+            margin-right: 12px;
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--header-bg);
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .header h2 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .icon-1 { background: linear-gradient(135deg, #4361ee, #3a0ca3); }
+        .icon-2 { background: linear-gradient(135deg, #f8961e, #e36414); }
+        .icon-3 { background: linear-gradient(135deg, #4cc9f0, #4895ef); }
+        .icon-4 { background: linear-gradient(135deg, #7209b7, #560bad); }
+        .icon-5 { background: linear-gradient(135deg, #f72585, #b5179e); }
+        .icon-6 { background: linear-gradient(135deg, #2ec4b6, #1a936f); }
+        .icon-7 { background: linear-gradient(135deg, #ff9e00, #ff5400); }
+        .icon-8 { background: linear-gradient(135deg, #06d6a0, #048a81); }
+        .icon-9 { background: linear-gradient(135deg, #ef476f, #e63946); }
+
+        .card-content {
+            flex-grow: 1;
+            margin-bottom: 20px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .card-stats {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        .card-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .card-action:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* Quick Stats */
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 22px;
+        }
+
+        .stat-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-info p {
+            font-size: 14px;
+            color: var(--gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-cards {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .quick-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-user-tie"></i>
+                <h1>TalentFlow HR</h1>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><i class="fas fa-home"></i> Dashboard</li>
+                <li><i class="fas fa-th-large"></i> 9-Box Matrix</li>
+                <li><i class="fas fa-chart-bar"></i> Employee Analytics</li>
+                <li><i class="fas fa-user-check"></i> Role Success Profiles</li>
+                <li><i class="fas fa-fire"></i> Gap Summary Heatmap</li>
+                <li><i class="fas fa-robot"></i> AI Recommendations</li>
+                <li><i class="fas fa-handshake"></i> Mentor Management</li>
+                <li><i class="fas fa-file-export"></i> Report Generation</li>
+                <li><i class="fas fa-search"></i> Bias Detection</li>
+                <li><i class="fas fa-cog"></i> Settings</li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h2>Employee Development Dashboard</h2>
+                <div class="user-info">
+                    <div>
+                        <p>Welcome, <strong>Sarah Johnson</strong></p>
+                        <p style="font-size: 14px; color: var(--gray);">HR Administrator</p>
+                    </div>
+                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User Profile">
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4361ee, #3a0ca3);">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>68%</h3>
+                        <p>Readiness</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #4cc9f0, #4895ef);">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>342</h3>
+                        <p>Active IDPs</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #06d6a0, #048a81);">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>187</h3>
+                        <p>Trainings Completed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f8961e, #e36414);">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>24</h3>
+                        <p>Succession Pipelines</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <!-- Card 1: Dashboard Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Dashboard Overview</div>
+                        <div class="card-icon icon-1">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Get a comprehensive view of organization-wide metrics including readiness percentage, active IDPs, and completed trainings.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-chart-bar"></i> Updated today
+                        </div>
+                        <button class="card-action">View Dashboard</button>
+                    </div>
+                </div>
+
+                <!-- Card 2: 9-Box Matrix View -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">9-Box Matrix View</div>
+                        <div class="card-icon icon-2">
+                            <i class="fas fa-th-large"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Visualize performance vs potential grid for all employees to identify high-potentials and talent development needs.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-users"></i> 240 employees mapped
+                        </div>
+                        <button class="card-action">Open Matrix</button>
+                    </div>
+                </div>
+
+                <!-- Card 3: Employee Analytics -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Employee Analytics</div>
+                        <div class="card-icon icon-3">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Filter employees by department, role, or readiness level to analyze talent distribution and development opportunities.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-filter"></i> 12 filters available
+                        </div>
+                        <button class="card-action">Analyze</button>
+                    </div>
+                </div>
+
+                <!-- Card 4: Role Success Profiles -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Role Success Profiles</div>
+                        <div class="card-icon icon-4">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Define and update competency requirements for each leadership role to establish clear development targets.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-briefcase"></i> 18 roles defined
+                        </div>
+                        <button class="card-action">Manage Profiles</button>
+                    </div>
+                </div>
+
+                <!-- Card 5: Gap Summary Heatmap -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Gap Summary Heatmap</div>
+                        <div class="card-icon icon-5">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Identify which skills are lacking across teams or regions with an intuitive visual heatmap representation.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-exclamation-triangle"></i> 34 gaps identified
+                        </div>
+                        <button class="card-action">View Heatmap</button>
+                    </div>
+                </div>
+
+                <!-- Card 6: AI Recommendations Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">AI Recommendations</div>
+                        <div class="card-icon icon-6">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        See what AI suggests for each employee's development based on performance data and career aspirations.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-lightbulb"></i> 128 recommendations
+                        </div>
+                        <button class="card-action">View AI Insights</button>
+                    </div>
+                </div>
+
+                <!-- Card 7: Mentor Management -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Mentor Management</div>
+                        <div class="card-icon icon-7">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Assign mentors or view mentor-mentee progress to foster knowledge sharing and career development.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-user-friends"></i> 45 active pairs
+                        </div>
+                        <button class="card-action">Manage Mentors</button>
+                    </div>
+                </div>
+
+                <!-- Card 8: Report Generation -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Report Generation</div>
+                        <div class="card-icon icon-8">
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Auto-generate PDF/Excel reports for management reviews with customizable templates and data visualizations.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-download"></i> 5 report templates
+                        </div>
+                        <button class="card-action">Generate Report</button>
+                    </div>
+                </div>
+
+                <!-- Card 9: Bias Detection Tool -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Bias Detection Tool</div>
+                        <div class="card-icon icon-9">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        Detect any rating or promotion bias trends to ensure fair and equitable talent management practices.
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-stats">
+                            <i class="fas fa-shield-alt"></i> No bias detected
+                        </div>
+                        <button class="card-action">Run Analysis</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity to the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click event to navigation items
+            const navItems = document.querySelectorAll('.nav-links li');
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    navItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Add hover effect to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Add click effect to buttons
+            const buttons = document.querySelectorAll('.card-action');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
