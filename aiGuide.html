@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AI Career Guidance - TalentGRID</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark-bg: #0f172a;
+      --dark-card: #1e293b;
+      --dark-border: #334155;
+      --dark-text: #f1f5f9;
+      --dark-muted: #94a3b8;
+      --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+      --glow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    
+    .ai-guide-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    
+    /* Header Styles */
+    .ai-guide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--dark-border);
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    
+    .ai-guide-left h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0.5rem 0 0.25rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .muted {
+      color: var(--dark-muted);
+      font-size: 0.9rem;
+    }
+    
+    .ghost {
+      background: none;
+      border: none;
+      color: var(--primary-light);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      transition: all 0.3s ease;
+    }
+    
+    .ghost:hover {
+      text-decoration: underline;
+      color: var(--primary);
+    }
+    
+    .ai-guide-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .readiness-pill {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--dark-card);
+      border-radius: 50px;
+      padding: 0.75rem 1.25rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--dark-border);
+      transition: all 0.3s ease;
+    }
+    
+    .readiness-pill:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--glow);
+    }
+    
+    .readiness-pill #readinessPct {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .readiness-pill .label {
+      font-size: 0.75rem;
+      color: var(--dark-muted);
+      margin-top: 0.25rem;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--glow);
+    }
+    
+    .btn-secondary {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary-light);
+      border: 1px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+    
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+    
+    /* Main Layout */
+    .ai-guide-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    /* AI Chat Section */
+    .ai-chat-section {
+      margin-bottom: 2rem;
+    }
+    
+    .ai-chat-main {
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--dark-border);
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+    
+    .ai-chat-main:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--glow);
+    }
+    
+    .ai-chat-header {
+      padding: 1rem;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    
+    .ai-chat-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    
+    .ai-chat-title {
+      font-weight: 600;
+    }
+    
+    .ai-chat-subtitle {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+    
+    .ai-chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    
+    .ai-message {
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      max-width: 85%;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      animation: messageSlide 0.3s ease;
+    }
+    
+    @keyframes messageSlide {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .ai-message.bot {
+      background: rgba(99, 102, 241, 0.2);
+      border-bottom-left-radius: 4px;
+      align-self: flex-start;
+    }
+    
+    .ai-message.user {
+      background: rgba(30, 41, 59, 0.7);
+      border-bottom-right-radius: 4px;
+      align-self: flex-end;
+    }
+    
+    .ai-chat-input-area {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .ai-chat-input {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--dark-border);
+      background: var(--dark-bg);
+      color: var(--dark-text);
+      font-size: 0.9rem;
+      resize: none;
+      height: 60px;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .ai-chat-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+    
+    .ai-chat-send {
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      border: none;
+      background: var(--primary);
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      align-self: flex-end;
+      height: 60px;
+    }
+    
+    .ai-chat-send:hover {
+      background: var(--primary-dark);
+    }
+    
+    .ai-suggestion-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    
+    .ai-suggestion-chip {
+      padding: 0.5rem 0.75rem;
+      background: rgba(99, 102, 241, 0.2);
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .ai-suggestion-chip:hover {
+      background: rgba(99, 102, 241, 0.4);
+    }
+    
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    /* Card Styles */
+    .card {
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--dark-border);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--glow);
+    }
+    
+    .card h3 {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      border-bottom: 1px solid var(--dark-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    /* Personal Assessment Card */
+    .assessment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .strengths-list, .development-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .strength-item, .development-item {
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      transition: all 0.3s ease;
+    }
+    
+    .strength-item:hover, .development-item:hover {
+      transform: translateX(5px);
+      background: rgba(16, 185, 129, 0.1);
+    }
+    
+    .development-item:hover {
+      background: rgba(245, 158, 11, 0.1);
+    }
+    
+    .strength-item {
+      border-left: 3px solid var(--success);
+    }
+    
+    .development-item {
+      border-left: 3px solid var(--warning);
+    }
+    
+    /* Career Simulations Card */
+    .career-pathways {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .pathway {
+      padding: 1rem;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      border-left: 3px solid var(--primary);
+      transition: all 0.3s ease;
+    }
+    
+    .pathway:hover {
+      transform: translateX(5px);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .pathway-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    
+    .pathway-title {
+      font-weight: 600;
+    }
+    
+    .pathway-probability {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+      background: rgba(148, 163, 184, 0.2);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .pathway-timeline {
+      font-size: 0.9rem;
+      color: var(--dark-muted);
+      margin-bottom: 0.75rem;
+    }
+    
+    .pathway-milestones {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .milestone {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8rem;
+    }
+    
+    .milestone-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .milestone-status.completed {
+      background: var(--success);
+    }
+    
+    .milestone-status.in-progress {
+      background: var(--warning);
+    }
+    
+    .milestone-status.planned {
+      background: var(--secondary);
+    }
+    
+    /* Action Plan Card */
+    .action-plan {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .plan-phase {
+      padding: 1rem;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      border-left: 3px solid var(--primary);
+      transition: all 0.3s ease;
+    }
+    
+    .plan-phase:hover {
+      transform: translateX(5px);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .phase-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    
+    .phase-title {
+      font-weight: 600;
+    }
+    
+    .phase-duration {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+      background: rgba(148, 163, 184, 0.2);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .phase-tasks {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .task-checkbox {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid var(--dark-border);
+      background: var(--dark-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .task-checkbox.checked {
+      background: var(--success);
+      border-color: var(--success);
+    }
+    
+    .task-checkbox.checked::after {
+      content: '✓';
+      color: white;
+      font-size: 0.7rem;
+    }
+    
+    /* Resource Center Card */
+    .resource-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .resource-category {
+      padding: 1rem;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      border-left: 3px solid var(--warning);
+      transition: all 0.3s ease;
+    }
+    
+    .resource-category:hover {
+      transform: translateX(5px);
+      background: rgba(245, 158, 11, 0.1);
+    }
+    
+    .category-title {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    
+    .resource-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .resource-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .resource-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.7rem;
+    }
+    
+    /* Gap Analysis Card */
+    .gap-analysis .chart-container {
+      height: 220px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .gap-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 1rem;
+    }
+    
+    .gap-table th, .gap-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid var(--dark-border);
+    }
+    
+    .gap-table th {
+      font-weight: 600;
+      color: var(--dark-muted);
+    }
+    
+    .gap-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    
+    .gap-badge.high {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+    
+    .gap-badge.medium {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+    
+    .gap-badge.low {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+    
+    /* Success Metrics Card */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    
+    .metric {
+      padding: 1rem;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    
+    .metric:hover {
+      transform: translateY(-5px);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+    
+    .metric-label {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--dark-card);
+      color: white;
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+      transform: translateX(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--primary);
+      z-index: 1000;
+    }
+    
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      .ai-guide-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .ai-guide-right {
+        align-self: flex-start;
+      }
+      
+      .top-grid, .content-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .assessment-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .metrics-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .ai-chat-main {
+        height: 500px;
+      }
+    }
+    
+    /* Animation Classes */
+    .animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .stagger-animation > * {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  </style>
+</head>
+<body>
+  <div class="ai-guide-wrap">
+    <header class="ai-guide-header">
+      <div class="ai-guide-left">
+        <button id="backBtn" class="ghost">
+            <a href="employeedash.html" style="color: inherit; text-decoration: none;">&larr; Back to Dashboard</a>
+        </button>
+        <h1>AI Career Guidance</h1>
+        <div class="muted">Personalized career development recommendations for John Smith</div>
+      </div>
+      <div class="ai-guide-right">
+        <div class="readiness-pill"><div id="readinessPct">65%</div><div class="label">Readiness</div></div>
+        <button id="savePlan" class="btn">Save My Plan</button>
+      </div>
+    </header>
+
+    <main class="ai-guide-main">
+      <!-- AI Chat Section -->
+      <section class="ai-chat-section">
+        <div class="ai-chat-main">
+          <div class="ai-chat-header">
+            <div class="ai-chat-avatar">AI</div>
+            <div>
+              <div class="ai-chat-title">Career Success AI Assistant</div>
+              <div class="ai-chat-subtitle">Ask me anything about your career development</div>
+            </div>
+          </div>
+          <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-message bot">
+              <strong>Hello John!</strong> I'm your AI Career Assistant. I've analyzed your profile and I'm here to help you with personalized career guidance. 
+              <div class="ai-suggestion-chips">
+                <div class="ai-suggestion-chip" data-prompt="What skills should I focus on?">Skills to focus on</div>
+                <div class="ai-suggestion-chip" data-prompt="How can I improve my leadership?">Leadership development</div>
+                <div class="ai-suggestion-chip" data-prompt="What are my next career steps?">Career progression</div>
+                <div class="ai-suggestion-chip" data-prompt="Show me mentorship opportunities">Mentorship</div>
+              </div>
+            </div>
+          </div>
+          <div class="ai-chat-input-area">
+            <textarea class="ai-chat-input" id="aiChatInput" placeholder="Type your career question here..."></textarea>
+            <button class="ai-chat-send" id="aiChatSend">Send</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="top-grid">
+        <div class="card assessment">
+          <h3>Personal Career Assessment</h3>
+          <div class="assessment-grid">
+            <div class="strengths">
+              <h4>Key Strengths</h4>
+              <div class="strengths-list">
+                <div class="strength-item">
+                  <strong>Technical Expertise</strong>
+                  <div class="muted">Advanced skills in cloud architecture and system design</div>
+                </div>
+                <div class="strength-item">
+                  <strong>Problem Solving</strong>
+                  <div class="muted">Excellent analytical and troubleshooting abilities</div>
+                </div>
+                <div class="strength-item">
+                  <strong>Team Collaboration</strong>
+                  <div class="muted">Strong interpersonal skills and team player mentality</div>
+                </div>
+              </div>
+            </div>
+            <div class="development">
+              <h4>Development Areas</h4>
+              <div class="development-list">
+                <div class="development-item">
+                  <strong>Strategic Thinking</strong>
+                  <div class="muted">Need to develop long-term planning capabilities</div>
+                </div>
+                <div class="development-item">
+                  <strong>Leadership Presence</strong>
+                  <div class="muted">Building executive presence and influence</div>
+                </div>
+                <div class="development-item">
+                  <strong>Stakeholder Management</strong>
+                  <div class="muted">Improving communication with senior leadership</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card simulations">
+          <h3>Career Path Simulations</h3>
+          <div class="career-pathways">
+            <div class="pathway">
+              <div class="pathway-header">
+                <div class="pathway-title">Technical Leadership Track</div>
+                <div class="pathway-probability">Success: 85%</div>
+              </div>
+              <div class="pathway-timeline">Target: Lead Engineer (12-18 months)</div>
+              <div class="pathway-milestones">
+                <div class="milestone">
+                  <div class="milestone-status completed"></div>
+                  <span>Complete Leadership Fundamentals</span>
+                </div>
+                <div class="milestone">
+                  <div class="milestone-status in-progress"></div>
+                  <span>Lead cross-functional project</span>
+                </div>
+                <div class="milestone">
+                  <div class="milestone-status planned"></div>
+                  <span>Advanced cloud certification</span>
+                </div>
+              </div>
+            </div>
+            <div class="pathway">
+              <div class="pathway-header">
+                <div class="pathway-title">Management Track</div>
+                <div class="pathway-probability">Success: 72%</div>
+              </div>
+              <div class="pathway-timeline">Target: Engineering Manager (18-24 months)</div>
+              <div class="pathway-milestones">
+                <div class="milestone">
+                  <div class="milestone-status completed"></div>
+                  <span>Complete Leadership Fundamentals</span>
+                </div>
+                <div class="milestone">
+                  <div class="milestone-status planned"></div>
+                  <span>People Management Training</span>
+                </div>
+                <div class="milestone">
+                  <div class="milestone-status planned"></div>
+                  <span>Mentor junior team members</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <div class="card action-plan">
+          <h3>Personalized Action Plan</h3>
+          <div class="action-plan">
+            <div class="plan-phase">
+              <div class="phase-header">
+                <div class="phase-title">Month 1-3: Foundation Building</div>
+                <div class="phase-duration">Next 90 days</div>
+              </div>
+              <div class="phase-tasks">
+                <div class="task">
+                  <div class="task-checkbox checked"></div>
+                  <span>Complete Strategic Leadership Program</span>
+                </div>
+                <div class="task">
+                  <div class="task-checkbox"></div>
+                  <span>Identify cross-functional project opportunity</span>
+                </div>
+                <div class="task">
+                  <div class="task-checkbox"></div>
+                  <span>Schedule monthly mentorship sessions</span>
+                </div>
+              </div>
+            </div>
+            <div class="plan-phase">
+              <div class="phase-header">
+                <div class="phase-title">Month 4-6: Skill Application</div>
+                <div class="phase-duration">Months 4-6</div>
+              </div>
+              <div class="phase-tasks">
+                <div class="task">
+                  <div class="task-checkbox"></div>
+                  <span>Lead small team initiative</span>
+                </div>
+                <div class="task">
+                  <div class="task-checkbox"></div>
+                  <span>Attend strategic planning meetings</span>
+                </div>
+                <div class="task">
+                  <div class="task-checkbox"></div>
+                  <span>Complete advanced technical certification</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card resources">
+          <h3>Resource Center</h3>
+          <div class="resource-categories">
+            <div class="resource-category">
+              <div class="category-title">Learning Resources</div>
+              <div class="resource-list">
+                <div class="resource-item">
+                  <div class="resource-icon">B</div>
+                  <span>"The Manager's Path" by Camille Fournier</span>
+                </div>
+                <div class="resource-item">
+                  <div class="resource-icon">C</div>
+                  <span>Strategic Leadership Course (Internal)</span>
+                </div>
+                <div class="resource-item">
+                  <div class="resource-icon">L</div>
+                  <span>LinkedIn Learning: Executive Presence</span>
+                </div>
+              </div>
+            </div>
+            <div class="resource-category">
+              <div class="category-title">Networking Opportunities</div>
+              <div class="resource-list">
+                <div class="resource-item">
+                  <div class="resource-icon">M</div>
+                  <span>Engineering Leadership Meetup (Monthly)</span>
+                </div>
+                <div class="resource-item">
+                  <div class="resource-icon">C</div>
+                  <span>Cloud Architecture Conference 2024</span>
+                </div>
+                <div class="resource-item">
+                  <div class="resource-icon">I</div>
+                  <span>Internal Innovation Committee</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card gap-analysis">
+          <h3>Competency Gap Analysis</h3>
+          <div class="chart-container">
+            <canvas id="gapChart"></canvas>
+          </div>
+          <table class="gap-table">
+            <thead>
+              <tr>
+                <th>Competency</th>
+                <th>Current</th>
+                <th>Target</th>
+                <th>Gap</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Strategic Thinking</td>
+                <td>2.5/5</td>
+                <td>4.5/5</td>
+                <td><span class="gap-badge high">High</span></td>
+              </tr>
+              <tr>
+                <td>Team Leadership</td>
+                <td>3.2/5</td>
+                <td>4.5/5</td>
+                <td><span class="gap-badge medium">Medium</span></td>
+              </tr>
+              <tr>
+                <td>Technical Expertise</td>
+                <td>4.8/5</td>
+                <td>5.0/5</td>
+                <td><span class="gap-badge low">Low</span></td>
+              </tr>
+              <tr>
+                <td>Stakeholder Management</td>
+                <td>2.8/5</td>
+                <td>4.0/5</td>
+                <td><span class="gap-badge medium">Medium</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card metrics">
+          <h3>Success Metrics & KPIs</h3>
+          <div class="metrics-grid">
+            <div class="metric">
+              <div class="metric-value">85%</div>
+              <div class="metric-label">Learning Completion</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">4.2/5</div>
+              <div class="metric-label">Leadership Score</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">72%</div>
+              <div class="metric-label">Project Success Rate</div>
+            </div>
+            <div class="metric">
+              <div class="metric-value">88%</div>
+              <div class="metric-label">Team Satisfaction</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize animations
+        initAnimations();
+        
+        // Initialize Charts
+        initGapChart();
+        
+        // Set up event listeners
+        setupEventListeners();
+        
+        // Initialize AI Chat
+        initAIChat();
+    });
+
+    // Gemini API Configuration - REPLACE WITH YOUR ACTUAL API KEY
+    const GEMINI_API_KEY = 'AIzaSyBqRr7TMXLUaP7CA_3offI1G5-CHKULhwM'; // ← REPLACE THIS
+    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`;
+
+    async function generateAIResponse(message) {
+        // Show loading state
+        showToast('Connecting to AI...');
+        
+        try {
+            console.log('Sending request to Gemini API...');
+            
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `You are an AI Career Assistant for TalentGRID. 
+                            Context: Employee is John Smith, Senior Engineer targeting Lead Engineer role.
+                            Current readiness: 65%
+                            Strengths: Technical expertise, problem-solving, team collaboration
+                            Development areas: Strategic thinking, leadership presence, stakeholder management
+                            
+                            User question: "${message}"
+                            
+                            Provide specific, actionable career advice. Be professional but helpful.`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 800,
+                    }
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            console.log('Gemini API response:', data);
+            
+            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+                return data.candidates[0].content.parts[0].text;
+            } else {
+                throw new Error('Invalid response format from Gemini API');
+            }
+            
+        } catch (error) {
+            console.error('Gemini API Error details:', error);
+            
+            // Fallback responses based on common questions
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('skill') || lowerMessage.includes('develop')) {
+                return "Based on your profile, focus on **Strategic Thinking** and **Team Leadership**. Consider taking the Strategic Leadership Program and seeking mentorship from senior leaders.";
+            } else if (lowerMessage.includes('leader') || lowerMessage.includes('manage')) {
+                return "For leadership development, I recommend:\n\n• Leading cross-functional projects\n• Mentoring junior team members\n• Attending leadership training sessions\n• Seeking feedback from your manager";
+            } else if (lowerMessage.includes('career') || lowerMessage.includes('promot')) {
+                return "Your path to Lead Engineer looks promising! Key steps:\n\n1. Complete leadership training (in progress)\n2. Lead a major project initiative\n3. Develop stakeholder management skills\n4. Build strategic thinking capabilities";
+            } else {
+                return "I'd be happy to help with your career development! I can assist with:\n\n• Skills development planning\n• Leadership growth strategies\n• Career path guidance\n• Mentorship recommendations\n\nWhat specific area would you like to discuss?";
+            }
+        }
+    }
+
+    function initAnimations() {
+        // Animate header
+        anime({
+            targets: '.ai-guide-header',
+            opacity: [0, 1],
+            translateY: [-20, 0],
+            duration: 800,
+            easing: 'easeOutCubic'
+        });
+        
+        // Animate chat section
+        anime({
+            targets: '.ai-chat-main',
+            opacity: [0, 1],
+            translateY: [20, 0],
+            duration: 800,
+            easing: 'easeOutCubic',
+            delay: 200
+        });
+        
+        // Animate cards with stagger
+        anime({
+            targets: '.card',
+            opacity: [0, 1],
+            translateY: [20, 0],
+            delay: anime.stagger(100, {start: 400}),
+            duration: 800,
+            easing: 'easeOutCubic'
+        });
+    }
+
+    function initGapChart() {
+        const gapCtx = document.getElementById('gapChart').getContext('2d');
+        // ... keep your existing chart code ...
+    }
+
+    function setupEventListeners() {
+        // ... keep your existing event listeners ...
+    }
+
+    function initAIChat() {
+        const chatSend = document.getElementById('aiChatSend');
+        const chatInput = document.getElementById('aiChatInput');
+        const chatMessages = document.getElementById('aiChatMessages');
+        
+        // Send message
+        chatSend.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+        
+        // Suggestion chips
+        document.querySelectorAll('.ai-suggestion-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                chatInput.value = this.dataset.prompt;
+                sendMessage();
+            });
+        });
+        
+        async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            chatInput.value = '';
+            
+            // Show thinking indicator
+            const thinkingMsg = addMessage('Thinking...', 'bot');
+            
+            try {
+                // Get AI response
+                const response = await generateAIResponse(message);
+                
+                // Remove thinking message
+                chatMessages.removeChild(thinkingMsg);
+                
+                // Add AI response
+                addMessage(response, 'bot');
+                
+            } catch (error) {
+                // Remove thinking message
+                chatMessages.removeChild(thinkingMsg);
+                
+                // Show fallback response
+                const fallbackResponse = "I'm currently experiencing technical difficulties. Here's some general advice: Focus on developing your strategic thinking and leadership skills through the recommended training programs and mentorship opportunities.";
+                addMessage(fallbackResponse, 'bot');
+            }
+        }
+        
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ${sender}`;
+            
+            // Format the message
+            let formattedText = text
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/\n/g, '<br>');
+            
+            messageDiv.innerHTML = formattedText;
+            const messageElement = chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Animate message
+            anime({
+                targets: messageDiv,
+                opacity: [0, 1],
+                translateY: [10, 0],
+                duration: 300,
+                easing: 'easeOutCubic'
+            });
+            
+            return messageElement;
+        }
+    }
+
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        anime({
+            targets: '#toast',
+            translateX: [100, 0],
+            opacity: [0, 1],
+            duration: 500,
+            easing: 'easeOutCubic'
+        });
+        
+        setTimeout(() => {
+            anime({
+                targets: '#toast',
+                translateX: [0, 100],
+                opacity: [1, 0],
+                duration: 500,
+                easing: 'easeInCubic',
+                complete: function() {
+                    toast.classList.remove('show');
+                }
+            });
+        }, 3000);
+    }
+</script>
+
+
+</body>
+</html>

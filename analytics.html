@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Analytics - TalentGRID</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-blue: #005A9C; 
+            --secondary-blue: #0d6efd; 
+            --light-blue: #eef7ff; 
+            --background-color: #f5f7fa; 
+            --sidebar-bg: #ffffff; 
+            --card-bg: #ffffff; 
+            --text-primary: #121212; 
+            --text-secondary: #5a5a5a; 
+            --border-color: #e9ecef; 
+            --shadow: 0 4px 25px rgba(0, 0, 0, 0.05); 
+            --sidebar-width: 260px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--background-color); color: var(--text-primary); display: flex; }
+        .dashboard-container { display: flex; width: 100%; min-height: 100vh; }
+        .sidebar { width: var(--sidebar-width); background-color: var(--sidebar-bg); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem; flex-shrink: 0; }
+        .sidebar-header { display: flex; align-items: center; margin-bottom: 2.5rem; }
+        .logo { height: 40px; margin-right: 10px; }
+        .sidebar-title h2 { font-size: 1.5rem; color: var(--primary-blue); font-weight: 700; margin: 0; }
+        .sidebar-nav ul { list-style: none; flex-grow: 1; }
+        .sidebar-nav li a { display: flex; align-items: center; padding: 0.9rem 1rem; color: var(--text-secondary); text-decoration: none; border-radius: 8px; margin-bottom: 0.5rem; font-weight: 500; transition: background-color 0.3s, color 0.3s; }
+        .sidebar-nav li a svg { margin-right: 1rem; stroke-width: 2.5px; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: var(--light-blue); color: var(--primary-blue); }
+        .main-content { flex-grow: 1; padding: 2rem 2.5rem; overflow-y: auto; }
+        .main-header h1 { font-size: 2rem; font-weight: 600; margin-bottom: 2rem; }
+        .content-card { background-color: var(--card-bg); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); margin-bottom: 2.5rem; }
+        .content-card h3 { font-weight: 600; margin-bottom: 1.5rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 0.9rem; border-bottom: 1px solid var(--border-color); }
+        th { font-weight: 600; font-size: 0.9rem; }
+        td { font-size: 0.9rem; }
+        .status { padding: 0.25rem 0.6rem; border-radius: 20px; font-weight: 500; font-size: 0.8rem; }
+        .status.critical { background-color: #ffe0e0; color: #c62828; }
+        .status.healthy { background-color: #dcedc8; color: #33691e; }
+        .status.monitored { background-color: #fff0c2; color: #f57f17; }
+        .analytics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .heatmap-cell { padding: 0.7rem; text-align: center; font-weight: 600; }
+        .heatmap-high { background-color: #2e7d32; color: white; }
+        .heatmap-medium { background-color: #ffb300; color: white; }
+        .heatmap-low { background-color: #c62828; color: white; }
+        .chart-container { position: relative; height: 350px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/30/POWERGRID_Logo.svg" alt="POWERGRID Logo" class="logo">
+                <div class="sidebar-title"><h2>TalentGRID</h2></div>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="maindash.html">
+                    Dashboard
+                </a></li>
+                <li><a href="pipeline.html">Pipeline</a></li>
+                <li><a href="analytics.html" class="active">Analytics</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header class="main-header"><h1>Talent Analytics</h1></header>
+
+            <div class="analytics-grid">
+                <div class="content-card">
+                    <h3>Leadership Pipeline Diversity</h3>
+                    <div class="chart-container">
+                        <canvas id="diversityChart"></canvas>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <h3>High-Potential Turnover Risk</h3>
+                     <table>
+                        <thead><tr><th>Employee Name</th><th>Potential</th><th>Risk Level</th></tr></thead>
+                        <tbody>
+                            <tr><td>Rajesh Gupta</td><td>High</td><td><span class="status critical">High</span></td></tr>
+                            <tr><td>Meera Iyer</td><td>High</td><td><span class="status monitored">Medium</span></td></tr>
+                            <tr><td>Amit Patel</td><td>High</td><td><span class="status healthy">Low</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h3>Organizational Competency Heatmap</h3>
+                <table>
+                    <thead><tr><th>Competency</th><th>Operations</th><th>Finance</th><th>Transmission</th><th>HR</th></tr></thead>
+                    <tbody>
+                        <tr><td>Strategic Thinking</td><td class="heatmap-cell heatmap-high">Strong</td><td class="heatmap-cell heatmap-medium">Medium</td><td class="heatmap-cell heatmap-high">Strong</td><td class="heatmap-cell heatmap-medium">Medium</td></tr>
+                        <tr><td>Financial Acumen</td><td class="heatmap-cell heatmap-low">Gap</td><td class="heatmap-cell heatmap-high">Strong</td><td class="heatmap-cell heatmap-medium">Medium</td><td class="heatmap-cell heatmap-low">Gap</td></tr>
+                        <tr><td>People Leadership</td><td class="heatmap-cell heatmap-high">Strong</td><td class="heatmap-cell heatmap-medium">Medium</td><td class="heatmap-cell heatmap-medium">Medium</td><td class="heatmap-cell heatmap-high">Strong</td></tr>
+                        <tr><td>Change Management</td><td class="heatmap-cell heatmap-medium">Medium</td><td class="heatmap-cell heatmap-low">Gap</td><td class="heatmap-cell heatmap-low">Gap</td><td class="heatmap-cell heatmap-high">Strong</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let diversityChart; // global variable
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('diversityChart').getContext('2d');
+
+            // destroy if already exists (prevents expansion bug)
+            if (diversityChart) diversityChart.destroy();
+
+            diversityChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Directors', 'Sr. Managers', 'Managers', 'Team Leads'],
+                    datasets: [
+                        { label: 'Men', data: [8, 25, 40, 60], backgroundColor: '#005A9C' },
+                        { label: 'Women', data: [3, 15, 35, 55], backgroundColor: '#00bfa5' }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { x: { stacked: true }, y: { stacked: true } },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Find My Mentor - TalentGRID</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #818cf8;
+      --secondary: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark-bg: #0f172a;
+      --dark-card: #1e293b;
+      --dark-border: #334155;
+      --dark-text: #f1f5f9;
+      --dark-muted: #94a3b8;
+      --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+      --glow: 0 0 10px rgba(99, 102, 241, 0.5);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--dark-text);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    
+    .mentor-match-wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    
+    /* Header Styles */
+    .mentor-match-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--dark-border);
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    
+    .mentor-match-left h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin: 0.5rem 0 0.25rem;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .muted {
+      color: var(--dark-muted);
+      font-size: 0.9rem;
+    }
+    
+    .ghost {
+      background: none;
+      border: none;
+      color: var(--primary-light);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.5rem 0;
+      transition: all 0.3s ease;
+    }
+    
+    .ghost:hover {
+      text-decoration: underline;
+      color: var(--primary);
+    }
+    
+    .mentor-match-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--card-shadow);
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--glow);
+    }
+    
+    .btn-secondary {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary-light);
+      border: 1px solid var(--primary);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+    
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+    
+    /* Main Layout */
+    .mentor-match-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    
+    .match-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    /* Card Styles */
+    .card {
+      background: var(--dark-card);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--dark-border);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--glow);
+    }
+    
+    .card h3 {
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-light);
+      border-bottom: 1px solid var(--dark-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    /* AI Matching Dashboard */
+    .matching-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .compatibility-score {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: rgba(16, 185, 129, 0.1);
+      border-radius: 8px;
+      border-left: 3px solid var(--success);
+    }
+    
+    .score-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+    
+    .score-label {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+    }
+    
+    .match-filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    
+    .filter-select {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--dark-border);
+      background: var(--dark-bg);
+      color: var(--dark-text);
+      font-size: 0.9rem;
+    }
+    
+    /* Mentor Profiles */
+    .mentor-profiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      flex: 1;
+    }
+    
+    .mentor-card {
+      padding: 1.5rem;
+      border-radius: 8px;
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--dark-border);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .mentor-card:hover {
+      transform: translateY(-5px);
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .mentor-header {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .mentor-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    
+    .mentor-info {
+      flex: 1;
+    }
+    
+    .mentor-name {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .mentor-role {
+      font-size: 0.9rem;
+      color: var(--dark-muted);
+      margin-bottom: 0.5rem;
+    }
+    
+    .mentor-rating {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .star {
+      color: var(--warning);
+    }
+    
+    .mentor-expertise {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .expertise-tag {
+      padding: 0.25rem 0.5rem;
+      background: rgba(99, 102, 241, 0.2);
+      border-radius: 4px;
+      font-size: 0.8rem;
+    }
+    
+    .mentor-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: auto;
+    }
+    
+    /* Chat Interface */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+      border: 1px solid var(--dark-border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .chat-header {
+      padding: 1rem;
+      background: rgba(30, 41, 59, 0.7);
+      border-bottom: 1px solid var(--dark-border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .chat-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    
+    .chat-info {
+      flex: 1;
+    }
+    
+    .chat-name {
+      font-weight: 600;
+    }
+    
+    .chat-status {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+    }
+    
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+    
+    .chat-messages {
+      flex: 1;
+      padding: 1rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .message {
+      max-width: 70%;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      position: relative;
+    }
+    
+    .message.received {
+      align-self: flex-start;
+      background: rgba(30, 41, 59, 0.7);
+      border-bottom-left-radius: 4px;
+    }
+    
+    .message.sent {
+      align-self: flex-end;
+      background: rgba(99, 102, 241, 0.2);
+      border-bottom-right-radius: 4px;
+    }
+    
+    .message-time {
+      font-size: 0.7rem;
+      color: var(--dark-muted);
+      margin-top: 0.25rem;
+      text-align: right;
+    }
+    
+    .chat-input {
+      display: flex;
+      padding: 1rem;
+      border-top: 1px solid var(--dark-border);
+      background: rgba(30, 41, 59, 0.7);
+    }
+    
+    .message-input {
+      flex: 1;
+      padding: 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--dark-border);
+      background: var(--dark-bg);
+      color: var(--dark-text);
+      font-size: 0.9rem;
+      resize: none;
+      height: 50px;
+    }
+    
+    .message-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+    
+    .send-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 0 1.5rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .send-btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    /* Profile Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .profile-modal {
+      background: var(--dark-card);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--dark-border);
+      transform: scale(0.9);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-overlay.active .profile-modal {
+      transform: scale(1);
+      opacity: 1;
+    }
+    
+    .modal-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--dark-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--dark-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .modal-close:hover {
+      color: var(--primary);
+    }
+    
+    .modal-body {
+      padding: 1.5rem;
+    }
+    
+    .profile-header {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      font-size: 2rem;
+    }
+    
+    .profile-info {
+      flex: 1;
+    }
+    
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .profile-role {
+      font-size: 1.1rem;
+      color: var(--primary-light);
+      margin-bottom: 1rem;
+    }
+    
+    .profile-stats {
+      display: flex;
+      gap: 1.5rem;
+    }
+    
+    .stat {
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+    }
+    
+    .profile-sections {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    
+    .profile-section {
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--primary-light);
+      border-bottom: 1px solid var(--dark-border);
+      padding-bottom: 0.5rem;
+    }
+    
+    .experience-item {
+      margin-bottom: 1.5rem;
+    }
+    
+    .experience-role {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+    
+    .experience-company {
+      color: var(--primary-light);
+      margin-bottom: 0.25rem;
+    }
+    
+    .experience-duration {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+    }
+    
+    .skill-meter {
+      margin-bottom: 1rem;
+    }
+    
+    .skill-name {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    
+    .skill-bar {
+      height: 6px;
+      background: var(--dark-border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    
+    .skill-progress {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--primary-light));
+      border-radius: 3px;
+    }
+    
+    .review-item {
+      padding: 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+    
+    .reviewer {
+      font-weight: 600;
+    }
+    
+    .review-date {
+      font-size: 0.8rem;
+      color: var(--dark-muted);
+    }
+    
+    .review-rating {
+      color: var(--warning);
+      margin-bottom: 0.5rem;
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--dark-card);
+      color: white;
+      border-radius: 8px;
+      box-shadow: var(--card-shadow);
+      transform: translateX(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--primary);
+      z-index: 1000;
+    }
+    
+    .toast.show {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 1024px) {
+      .match-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .mentor-profiles {
+        grid-template-columns: 1fr;
+      }
+      
+      .profile-sections {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .mentor-match-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .mentor-match-right {
+        align-self: flex-start;
+      }
+      
+      .profile-header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+    
+    /* Animation Classes */
+    .animate-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .stagger-animation > * {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+  </style>
+</head>
+<body>
+  <div class="mentor-match-wrap">
+    <header class="mentor-match-header">
+      <div class="mentor-match-left">
+        <button id="backBtn" class="ghost">
+            <a href="mentorGuide.html" style="color: inherit; text-decoration: none;">&larr; Back to Mentor Guidance</a>
+        </button>
+        <h1>Find My Mentor</h1>
+        <div class="muted">AI-powered mentor matching with instant chat</div>
+      </div>
+      <div class="mentor-match-right">
+        <button id="refreshMatches" class="btn">Refresh Matches</button>
+      </div>
+    </header>
+
+    <main class="mentor-match-main">
+      <section class="match-grid">
+        <div class="card matching">
+          <div class="matching-header">
+            <h3>AI Mentor Matching</h3>
+            <div class="compatibility-score">
+              <div class="score-value">92%</div>
+              <div class="score-label">Match Score</div>
+            </div>
+          </div>
+          
+          <div class="match-filters">
+            <select class="filter-select" id="departmentFilter">
+              <option>All Departments</option>
+              <option>Engineering</option>
+              <option>Product</option>
+              <option>Design</option>
+              <option>Marketing</option>
+              <option>Sales</option>
+            </select>
+            <select class="filter-select" id="expertiseFilter">
+              <option>All Expertise</option>
+              <option>Technical Leadership</option>
+              <option>Career Growth</option>
+              <option>Management</option>
+              <option>Product Strategy</option>
+              <option>UX/UI Design</option>
+            </select>
+            <select class="filter-select" id="availabilityFilter">
+              <option>Any Availability</option>
+              <option>Weekly</option>
+              <option>Bi-weekly</option>
+              <option>Monthly</option>
+            </select>
+          </div>
+          
+          <div class="mentor-profiles">
+            <div class="mentor-card">
+              <div class="mentor-header">
+                <div class="mentor-avatar">RS</div>
+                <div class="mentor-info">
+                  <div class="mentor-name">Robert Sharma</div>
+                  <div class="mentor-role">Director of Engineering</div>
+                  <div class="mentor-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span>(4.9)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mentor-expertise">
+                <span class="expertise-tag">Technical Leadership</span>
+                <span class="expertise-tag">Cloud Architecture</span>
+                <span class="expertise-tag">Team Management</span>
+              </div>
+              <div class="mentor-actions">
+                <button class="btn btn-secondary btn-small view-profile" data-mentor-id="robert-sharma">View Profile</button>
+                <button class="btn btn-small connect-btn" data-mentor="Robert Sharma">Connect</button>
+              </div>
+            </div>
+            
+            <div class="mentor-card">
+              <div class="mentor-header">
+                <div class="mentor-avatar">SC</div>
+                <div class="mentor-info">
+                  <div class="mentor-name">Sarah Chen</div>
+                  <div class="mentor-role">VP of Product</div>
+                  <div class="mentor-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span>(4.8)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mentor-expertise">
+                <span class="expertise-tag">Product Strategy</span>
+                <span class="expertise-tag">Stakeholder Management</span>
+                <span class="expertise-tag">Leadership</span>
+              </div>
+              <div class="mentor-actions">
+                <button class="btn btn-secondary btn-small view-profile" data-mentor-id="sarah-chen">View Profile</button>
+                <button class="btn btn-small connect-btn" data-mentor="Sarah Chen">Connect</button>
+              </div>
+            </div>
+            
+            <div class="mentor-card">
+              <div class="mentor-header">
+                <div class="mentor-avatar">MJ</div>
+                <div class="mentor-info">
+                  <div class="mentor-name">Michael Johnson</div>
+                  <div class="mentor-role">Senior UX Designer</div>
+                  <div class="mentor-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span>(4.7)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mentor-expertise">
+                <span class="expertise-tag">UX Research</span>
+                <span class="expertise-tag">Design Systems</span>
+                <span class="expertise-tag">User Testing</span>
+              </div>
+              <div class="mentor-actions">
+                <button class="btn btn-secondary btn-small view-profile" data-mentor-id="michael-johnson">View Profile</button>
+                <button class="btn btn-small connect-btn" data-mentor="Michael Johnson">Connect</button>
+              </div>
+            </div>
+            
+            <div class="mentor-card">
+              <div class="mentor-header">
+                <div class="mentor-avatar">AW</div>
+                <div class="mentor-info">
+                  <div class="mentor-name">Alex Williams</div>
+                  <div class="mentor-role">Engineering Manager</div>
+                  <div class="mentor-rating">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span>(4.6)</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mentor-expertise">
+                <span class="expertise-tag">Agile Methodology</span>
+                <span class="expertise-tag">Team Coaching</span>
+                <span class="expertise-tag">Performance Reviews</span>
+              </div>
+              <div class="mentor-actions">
+                <button class="btn btn-secondary btn-small view-profile" data-mentor-id="alex-williams">View Profile</button>
+                <button class="btn btn-small connect-btn" data-mentor="Alex Williams">Connect</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card chat">
+          <h3>Chat with Mentor</h3>
+          <div class="chat-container">
+            <div class="chat-header">
+              <div class="chat-avatar" id="activeMentorAvatar">RS</div>
+              <div class="chat-info">
+                <div class="chat-name" id="activeMentorName">Select a mentor to start chatting</div>
+                <div class="chat-status" id="activeMentorStatus">Connect to begin conversation</div>
+              </div>
+              <div class="status-indicator" id="activeMentorStatusIndicator"></div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+              <div class="message received">
+                <div>Hi there! I'd be happy to help you with your career development. What would you like to discuss?</div>
+                <div class="message-time">10:30 AM</div>
+              </div>
+              <div class="message sent">
+                <div>Hi Robert, I'm interested in learning more about technical leadership and how to transition into a management role.</div>
+                <div class="message-time">10:32 AM</div>
+              </div>
+              <div class="message received">
+                <div>That's a great goal! Technical leadership requires a balance of technical expertise and people skills. Let's schedule a session to discuss your current experience and create a development plan.</div>
+                <div class="message-time">10:33 AM</div>
+              </div>
+            </div>
+            <div class="chat-input">
+              <textarea class="message-input" id="messageInput" placeholder="Type your message here..." disabled></textarea>
+              <button class="send-btn" id="sendMessage" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+      <div class="profile-modal">
+        <div class="modal-header">
+          <h3 id="modalTitle">Mentor Profile</h3>
+          <button class="modal-close" id="modalClose">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          <!-- Profile content will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </div>
+
+  <script>
+    // Mentor data
+    const mentorsData = {
+      'robert-sharma': {
+        name: 'Robert Sharma',
+        role: 'Director of Engineering',
+        avatar: 'RS',
+        rating: 4.9,
+        reviews: 42,
+        mentees: 28,
+        expertise: ['Technical Leadership', 'Cloud Architecture', 'Team Management', 'Agile Methodology', 'System Design'],
+        bio: 'Experienced engineering leader with 12+ years in tech industry. Passionate about mentoring the next generation of technical leaders and helping engineers grow in their careers.',
+        experience: [
+          {
+            role: 'Director of Engineering',
+            company: 'TechCorp Inc.',
+            duration: '2020 - Present',
+            description: 'Leading a team of 50+ engineers across multiple product lines.'
+          },
+          {
+            role: 'Senior Engineering Manager',
+            company: 'Innovate Solutions',
+            duration: '2017 - 2020',
+            description: 'Managed three engineering teams focused on product development.'
+          },
+          {
+            role: 'Software Engineering Lead',
+            company: 'StartUp Ventures',
+            duration: '2014 - 2017',
+            description: 'Built and led the core engineering team from ground up.'
+          }
+        ],
+        skills: [
+          { name: 'Technical Leadership', level: 95 },
+          { name: 'Team Management', level: 90 },
+          { name: 'System Architecture', level: 88 },
+          { name: 'Agile Methodology', level: 85 },
+          { name: 'Mentoring', level: 92 }
+        ],
+        reviews: [
+          {
+            reviewer: 'Jennifer Lopez',
+            date: '2 weeks ago',
+            rating: 5,
+            text: 'Robert provided invaluable guidance during my transition to a leadership role. His insights on team management were particularly helpful.'
+          },
+          {
+            reviewer: 'David Kim',
+            date: '1 month ago',
+            rating: 5,
+            text: 'Excellent mentor who genuinely cares about your growth. Highly recommend for anyone looking to advance in technical leadership.'
+          },
+          {
+            reviewer: 'Sarah Mitchell',
+            date: '2 months ago',
+            rating: 4,
+            text: 'Great strategic thinking exercises and practical advice for engineering managers.'
+          }
+        ],
+        availability: 'Weekly sessions available',
+        matchScore: 92
+      },
+      'sarah-chen': {
+        name: 'Sarah Chen',
+        role: 'VP of Product',
+        avatar: 'SC',
+        rating: 4.8,
+        reviews: 38,
+        mentees: 24,
+        expertise: ['Product Strategy', 'Stakeholder Management', 'Leadership', 'Market Analysis', 'Roadmapping'],
+        bio: 'Product leader with 10+ years of experience building successful products. Focused on helping product managers develop strategic thinking and leadership skills.',
+        experience: [
+          {
+            role: 'VP of Product',
+            company: 'ProductVision Inc.',
+            duration: '2019 - Present',
+            description: 'Leading product strategy and vision for enterprise SaaS platform.'
+          },
+          {
+            role: 'Senior Product Manager',
+            company: 'GrowthTech',
+            duration: '2016 - 2019',
+            description: 'Managed product roadmap and execution for consumer mobile app.'
+          },
+          {
+            role: 'Product Manager',
+            company: 'Innovate Labs',
+            duration: '2013 - 2016',
+            description: 'Led product development for B2B software solutions.'
+          }
+        ],
+        skills: [
+          { name: 'Product Strategy', level: 92 },
+          { name: 'Stakeholder Management', level: 88 },
+          { name: 'Market Analysis', level: 85 },
+          { name: 'Roadmapping', level: 90 },
+          { name: 'Leadership', level: 87 }
+        ],
+        reviews: [
+          {
+            reviewer: 'Michael Thompson',
+            date: '3 weeks ago',
+            rating: 5,
+            text: 'Sarah helped me navigate complex stakeholder relationships and improved my strategic thinking significantly.'
+          },
+          {
+            reviewer: 'Emma Wilson',
+            date: '1 month ago',
+            rating: 5,
+            text: 'Incredible mentor who provides actionable advice and frameworks for product management challenges.'
+          },
+          {
+            reviewer: 'James Rodriguez',
+            date: '2 months ago',
+            rating: 4,
+            text: 'Great insights into product strategy and career growth in product management.'
+          }
+        ],
+        availability: 'Bi-weekly sessions available',
+        matchScore: 88
+      },
+      'michael-johnson': {
+        name: 'Michael Johnson',
+        role: 'Senior UX Designer',
+        avatar: 'MJ',
+        rating: 4.7,
+        reviews: 35,
+        mentees: 19,
+        expertise: ['UX Research', 'Design Systems', 'User Testing', 'UI Design', 'Prototyping'],
+        bio: 'Senior UX designer with 8+ years of experience creating user-centered digital products. Passionate about mentoring designers and helping them build impactful careers.',
+        experience: [
+          {
+            role: 'Senior UX Designer',
+            company: 'DesignFirst Co.',
+            duration: '2018 - Present',
+            description: 'Leading UX design for enterprise software products.'
+          },
+          {
+            role: 'UX Designer',
+            company: 'Creative Solutions',
+            duration: '2015 - 2018',
+            description: 'Designed user experiences for mobile and web applications.'
+          },
+          {
+            role: 'UI Designer',
+            company: 'Digital Agency',
+            duration: '2013 - 2015',
+            description: 'Created visual designs and interfaces for various clients.'
+          }
+        ],
+        skills: [
+          { name: 'UX Research', level: 90 },
+          { name: 'Design Systems', level: 85 },
+          { name: 'User Testing', level: 88 },
+          { name: 'UI Design', level: 92 },
+          { name: 'Prototyping', level: 87 }
+        ],
+        reviews: [
+          {
+            reviewer: 'Lisa Chen',
+            date: '2 weeks ago',
+            rating: 5,
+            text: 'Michael provided excellent guidance on building design systems and improving my UX research skills.'
+          },
+          {
+            reviewer: 'Alex Turner',
+            date: '1 month ago',
+            rating: 5,
+            text: 'Great mentor for designers looking to advance their careers. Very practical and actionable advice.'
+          },
+          {
+            reviewer: 'Sophia Martinez',
+            date: '6 weeks ago',
+            rating: 4,
+            text: 'Helpful feedback on portfolio and interview preparation for senior design roles.'
+          }
+        ],
+        availability: 'Weekly sessions available',
+        matchScore: 85
+      },
+      'alex-williams': {
+        name: 'Alex Williams',
+        role: 'Engineering Manager',
+        avatar: 'AW',
+        rating: 4.6,
+        reviews: 31,
+        mentees: 22,
+        expertise: ['Agile Methodology', 'Team Coaching', 'Performance Reviews', 'Technical Hiring', 'Project Management'],
+        bio: 'Engineering manager with 9+ years of experience leading high-performing teams. Focused on helping new managers develop effective leadership and management skills.',
+        experience: [
+          {
+            role: 'Engineering Manager',
+            company: 'ScaleTech Inc.',
+            duration: '2019 - Present',
+            description: 'Managing two engineering teams building scalable infrastructure.'
+          },
+          {
+            role: 'Team Lead',
+            company: 'DevSolutions',
+            duration: '2016 - 2019',
+            description: 'Led a team of 8 engineers developing cloud-based applications.'
+          },
+          {
+            role: 'Senior Software Engineer',
+            company: 'TechStart',
+            duration: '2013 - 2016',
+            description: 'Full-stack development and technical leadership for early-stage startup.'
+          }
+        ],
+        skills: [
+          { name: 'Team Coaching', level: 88 },
+          { name: 'Agile Methodology', level: 90 },
+          { name: 'Performance Management', level: 85 },
+          { name: 'Technical Hiring', level: 87 },
+          { name: 'Project Management', level: 83 }
+        ],
+        reviews: [
+          {
+            reviewer: 'Ryan Cooper',
+            date: '3 weeks ago',
+            rating: 5,
+            text: 'Alex helped me navigate the transition from IC to manager. His advice on team dynamics was invaluable.'
+          },
+          {
+            reviewer: 'Natalie Park',
+            date: '1 month ago',
+            rating: 4,
+            text: 'Great practical advice for new engineering managers. Very responsive and supportive.'
+          },
+          {
+            reviewer: 'Kevin Lewis',
+            date: '2 months ago',
+            rating: 5,
+            text: 'Excellent guidance on performance reviews and career development planning for my team.'
+          }
+        ],
+        availability: 'Bi-weekly sessions available',
+        matchScore: 83
+      }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize all features
+      initAnimations();
+      setupEventListeners();
+      initFilters();
+    });
+
+    function initAnimations() {
+      anime({
+        targets: '.mentor-match-header',
+        opacity: [0, 1],
+        translateY: [-20, 0],
+        duration: 800,
+        easing: 'easeOutCubic'
+      });
+      
+      anime({
+        targets: '.card',
+        opacity: [0, 1],
+        translateY: [20, 0],
+        delay: anime.stagger(100),
+        duration: 800,
+        easing: 'easeOutCubic'
+      });
+      
+      setTimeout(() => {
+        anime({
+          targets: '.mentor-card, .message',
+          opacity: [0, 1],
+          translateY: [10, 0],
+          delay: anime.stagger(50),
+          duration: 600,
+          easing: 'easeOutCubic'
+        });
+      }, 500);
+    }
+
+    function setupEventListeners() {
+      // Back button
+      document.getElementById('backBtn').addEventListener('click', function() {
+        showToast('Returning to mentor guidance...');
+        setTimeout(() => {
+          window.location.href = 'mentorGuide.html';
+        }, 1000);
+      });
+
+      // Refresh matches button
+      document.getElementById('refreshMatches').addEventListener('click', function() {
+        showToast('Finding new mentor matches...');
+        
+        // Simulate finding new matches
+        setTimeout(() => {
+          showToast('Found 2 new mentor matches for you!');
+          
+          // Add animation to mentor cards
+          anime({
+            targets: '.mentor-card',
+            scale: [0.9, 1],
+            opacity: [0.5, 1],
+            duration: 600,
+            easing: 'easeOutCubic'
+          });
+        }, 1500);
+      });
+
+      // Connect buttons
+      document.querySelectorAll('.connect-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const mentorName = this.getAttribute('data-mentor');
+          const mentorInitials = mentorName.split(' ').map(n => n[0]).join('');
+          
+          // Update chat header
+          document.getElementById('activeMentorName').textContent = mentorName;
+          document.getElementById('activeMentorAvatar').textContent = mentorInitials;
+          document.getElementById('activeMentorStatus').textContent = 'Online - Available for chat';
+          document.getElementById('activeMentorStatusIndicator').style.background = 'var(--success)';
+          
+          // Enable chat
+          document.getElementById('messageInput').disabled = false;
+          document.getElementById('sendMessage').disabled = false;
+          
+          // Clear chat messages
+          const chatMessages = document.getElementById('chatMessages');
+          chatMessages.innerHTML = '';
+          
+          // Add welcome message
+          const welcomeMessage = document.createElement('div');
+          welcomeMessage.className = 'message received';
+          welcomeMessage.innerHTML = `
+            <div>Hi there! Thanks for connecting. I'm ${mentorName} and I'd be happy to help you with your career development. What would you like to discuss?</div>
+            <div class="message-time">${getCurrentTime()}</div>
+          `;
+          chatMessages.appendChild(welcomeMessage);
+          
+          // Scroll to bottom
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+          
+          showToast(`Connected with ${mentorName}! You can now start chatting.`);
+          
+          // Add animation to chat
+          anime({
+            targets: '.chat-container',
+            scale: [0.95, 1],
+            duration: 500,
+            easing: 'easeOutCubic'
+          });
+        });
+      });
+
+      // View profile buttons
+      document.querySelectorAll('.view-profile').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const mentorId = this.getAttribute('data-mentor-id');
+          openProfileModal(mentorId);
+        });
+      });
+
+      // Modal close button
+      document.getElementById('modalClose').addEventListener('click', closeProfileModal);
+      
+      // Close modal when clicking outside
+      document.getElementById('profileModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeProfileModal();
+        }
+      });
+
+      // Send message functionality
+      document.getElementById('sendMessage').addEventListener('click', sendMessage);
+      
+      document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      // Card hover animations
+      document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          anime({
+            targets: this,
+            scale: 1.02,
+            duration: 300,
+            easing: 'easeOutCubic'
+          });
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          anime({
+            targets: this,
+            scale: 1,
+            duration: 300,
+            easing: 'easeOutCubic'
+          });
+        });
+      });
+    }
+
+    function openProfileModal(mentorId) {
+      const mentor = mentorsData[mentorId];
+      if (!mentor) return;
+      
+      const modalBody = document.getElementById('modalBody');
+      const modalTitle = document.getElementById('modalTitle');
+      
+      // Set modal title
+      modalTitle.textContent = `${mentor.name} - Profile`;
+      
+      // Generate profile content
+      modalBody.innerHTML = `
+        <div class="profile-header">
+          <div class="profile-avatar">${mentor.avatar}</div>
+          <div class="profile-info">
+            <div class="profile-name">${mentor.name}</div>
+            <div class="profile-role">${mentor.role}</div>
+            <div class="mentor-rating">
+              ${'★'.repeat(5)} <span>(${mentor.rating})</span>
+            </div>
+            <div class="profile-stats">
+              <div class="stat">
+                <div class="stat-value">${ Array.isArray(mentor.reviews) ? mentor.reviews.length : mentor.reviews }</div>
+                <div class="stat-label">Reviews</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">${mentor.mentees}</div>
+                <div class="stat-label">Mentees</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">${mentor.matchScore}%</div>
+                <div class="stat-label">Match Score</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="profile-sections">
+          <div class="profile-section">
+            <div class="section-title">About</div>
+            <p>${mentor.bio}</p>
+            
+            <div class="section-title" style="margin-top: 1.5rem;">Expertise</div>
+            <div class="mentor-expertise">
+              ${mentor.expertise.map(tag => `<span class="expertise-tag">${tag}</span>`).join('')}
+            </div>
+            
+            <div class="section-title" style="margin-top: 1.5rem;">Availability</div>
+            <p>${mentor.availability}</p>
+          </div>
+          
+          <div class="profile-section">
+            <div class="section-title">Experience</div>
+            ${mentor.experience.map(exp => `
+              <div class="experience-item">
+                <div class="experience-role">${exp.role}</div>
+                <div class="experience-company">${exp.company}</div>
+                <div class="experience-duration">${exp.duration}</div>
+                <p>${exp.description}</p>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="profile-section">
+            <div class="section-title">Skills</div>
+            ${mentor.skills.map(skill => `
+              <div class="skill-meter">
+                <div class="skill-name">
+                  <span>${skill.name}</span>
+                  <span>${skill.level}%</span>
+                </div>
+                <div class="skill-bar">
+                  <div class="skill-progress" style="width: ${skill.level}%"></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="profile-section">
+            <div class="section-title">Recent Reviews</div>
+            ${mentor.reviews.map(review => `
+              <div class="review-item">
+                <div class="review-header">
+                  <div class="reviewer">${review.reviewer}</div>
+                  <div class="review-date">${review.date}</div>
+                </div>
+                <div class="review-rating">${'★'.repeat(review.rating)}</div>
+                <p>${review.text}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      
+      // Show modal
+      document.getElementById('profileModal').classList.add('active');
+      
+      // Animate modal content
+      setTimeout(() => {
+        anime({
+          targets: '.profile-header, .profile-section',
+          opacity: [0, 1],
+          translateY: [20, 0],
+          delay: anime.stagger(100),
+          duration: 600,
+          easing: 'easeOutCubic'
+        });
+      }, 300);
+    }
+
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.remove('active');
+    }
+
+    function sendMessage() {
+      const messageInput = document.getElementById('messageInput');
+      const message = messageInput.value.trim();
+      
+      if (!message) return;
+      
+      const chatMessages = document.getElementById('chatMessages');
+      
+      // Add user message
+      const userMessage = document.createElement('div');
+      userMessage.className = 'message sent';
+      userMessage.innerHTML = `
+        <div>${message}</div>
+        <div class="message-time">${getCurrentTime()}</div>
+      `;
+      chatMessages.appendChild(userMessage);
+      
+      // Clear input
+      messageInput.value = '';
+      
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      // Simulate mentor response after a delay
+      setTimeout(() => {
+        const responses = [
+          "That's an interesting question. Let me think about how best to approach this.",
+          "I've faced similar challenges in my career. Here's what worked for me...",
+          "Great point! Based on my experience, I'd recommend focusing on...",
+          "That's a common concern. Many professionals struggle with this transition.",
+          "I appreciate you sharing that. Let's explore this topic further in our next session."
+        ];
+        
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        
+        const mentorMessage = document.createElement('div');
+        mentorMessage.className = 'message received';
+        mentorMessage.innerHTML = `
+          <div>${randomResponse}</div>
+          <div class="message-time">${getCurrentTime()}</div>
+        `;
+        chatMessages.appendChild(mentorMessage);
+        
+        // Scroll to bottom
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // Add animation to new message
+        anime({
+          targets: mentorMessage,
+          opacity: [0, 1],
+          translateY: [10, 0],
+          duration: 500,
+          easing: 'easeOutCubic'
+        });
+      }, 1000 + Math.random() * 2000);
+    }
+
+    function initFilters() {
+      const filters = ['departmentFilter', 'expertiseFilter', 'availabilityFilter'];
+      
+      filters.forEach(filterId => {
+        document.getElementById(filterId).addEventListener('change', function() {
+          const selectedValue = this.value;
+          if (selectedValue !== 'All Departments' && selectedValue !== 'All Expertise' && selectedValue !== 'Any Availability') {
+            showToast(`Filtered by: ${selectedValue}`);
+            
+            // Simulate filtering mentors
+            document.querySelectorAll('.mentor-card').forEach(card => {
+              card.style.display = 'block';
+            });
+            
+            // Add animation to filtered cards
+            anime({
+              targets: '.mentor-card',
+              scale: [0.95, 1],
+              opacity: [0.7, 1],
+              duration: 600,
+              easing: 'easeOutCubic'
+            });
+          }
+        });
+      });
+    }
+
+    function getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // Toast notification function
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      
+      anime({
+        targets: '#toast',
+        translateX: [100, 0],
+        opacity: [0, 1],
+        duration: 500,
+        easing: 'easeOutCubic'
+      });
+      
+      setTimeout(() => {
+        anime({
+          targets: '#toast',
+          translateX: [0, 100],
+          opacity: [1, 0],
+          duration: 500,
+          easing: 'easeInCubic',
+          complete: function() {
+            toast.classList.remove('show');
+          }
+        });
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
