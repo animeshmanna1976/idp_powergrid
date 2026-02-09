@@ -148,7 +148,7 @@ Start-Process .\login.html
 ## 🔑 Demo Flow
 
 ### Option A: Sign Up as New User (Recommended!)
-1. **Open** `landing.html`
+1. **Open** `landingpage.html`
 2. **Click** "Get Started"
 3. **Switch** to "Sign Up" tab
 4. **Select** Employee role
@@ -271,4 +271,5 @@ This platform demonstrates:
 *Transforming Succession Planning with AI*
 
 © 2025 POWERGRID. All rights reserved.
+
 
