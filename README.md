@@ -23,7 +23,7 @@ Each user now gets their own personalized dashboard! Sign up with your details a
 
 ## 🚀 Complete User Flow
 
-### 1. **Landing Page** (`landing.html`)
+### 1. **Landing Page** (`landingpage.html`)
 - Beautiful animated hero section with particle effects
 - Feature showcase with 6 core capabilities
 - Step-by-step "How It Works" walkthrough
@@ -271,3 +271,4 @@ This platform demonstrates:
 *Transforming Succession Planning with AI*
 
 © 2025 POWERGRID. All rights reserved.
+
